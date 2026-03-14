@@ -1,6 +1,12 @@
 import type { Metadata } from 'next';
+import { Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+});
 
 export const metadata: Metadata = {
   title: "Timothy's CTF Writeups",
@@ -14,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col selection:bg-black selection:text-white font-mono noise-overlay">
+      <body className={`antialiased min-h-screen flex flex-col selection:bg-black selection:text-white noise-overlay ${geistMono.variable} font-mono`}>
         <header className="border-b-[6px] border-black p-4 md:p-8 flex flex-col sm:flex-row justify-between sm:items-center bg-brutal-header gap-4">
           <Link href="/" className="font-[family-name:var(--font-impact)] text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter hover:bg-black hover:text-yellow-400 transition-none inline-block leading-none pb-2 border-4 border-transparent bg-yellow-400 px-2">
             TIMOTHY&apos;S CTF WRITEUPS
