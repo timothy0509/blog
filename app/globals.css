@@ -15,6 +15,34 @@
   --foreground: #000000;
 }
 
+.bg-brutal-header {
+  background: 
+    linear-gradient(135deg, #facc15 25%, transparent 25%),
+    linear-gradient(225deg, #ef4444 25%, transparent 25%),
+    linear-gradient(45deg, #3b82f6 25%, transparent 25%),
+    linear-gradient(315deg, #000 25%, #facc15 25%);
+  background-size: 40px 40px;
+  background-color: #facc15;
+}
+
+.bg-brutal-footer {
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 30px, #1a1a1a 30px, #1a1a1a 32px),
+    repeating-linear-gradient(90deg, transparent, transparent 30px, #1a1a1a 30px, #1a1a1a 32px),
+    repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(239, 68, 68, 0.3) 15px, rgba(239, 68, 68, 0.3) 17px);
+  background-color: #000;
+}
+
+.noise-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -36,13 +64,46 @@ body {
 }
 
 .prose-brutal.prose p {
+  margin-bottom: 1.25em;
+  margin-top: 0;
+}
+
+.prose-brutal.prose p:last-child {
   margin-bottom: 0;
 }
 
-.prose-brutal.prose h1 { font-family: var(--font-impact); text-transform: uppercase; margin-bottom: 0.5rem; }
-.prose-brutal.prose h2 { font-family: var(--font-impact); text-transform: uppercase; margin-bottom: 0.5rem; }
-.prose-brutal.prose h3 { font-family: var(--font-impact); text-transform: uppercase; margin-bottom: 0.5rem; }
-.prose-brutal.prose h4 { font-family: var(--font-impact); text-transform: uppercase; margin-bottom: 0.5rem; }
+.prose-brutal.prose h1 {
+  font-family: var(--font-impact);
+  text-transform: uppercase;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-brutal.prose h2 {
+  font-family: var(--font-impact);
+  text-transform: uppercase;
+  margin-top: 1.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.prose-brutal.prose h3 {
+  font-family: var(--font-impact);
+  text-transform: uppercase;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-brutal.prose h4 {
+  font-family: var(--font-impact);
+  text-transform: uppercase;
+  margin-top: 1.25rem;
+  margin-bottom: 0.625rem;
+}
+
+/* First heading in content should not have top margin */
+.prose-brutal.prose > :first-child {
+  margin-top: 0;
+}
 
 .prose-brutal a {
   color: #000;
@@ -58,7 +119,8 @@ body {
   background: #000;
   color: #fff;
   border: 4px solid #000;
-  padding: 1rem;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
   overflow-x: auto;
 }
 
@@ -75,37 +137,139 @@ body {
   padding: 0;
 }
 
+.code-block-wrapper {
+  position: relative;
+}
+
+.code-language-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hljs-comment,
+.hljs-quote { color: #8b949e; }
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst { color: #ff7b72; }
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr { color: #79c0ff; }
+
+.hljs-string,
+.hljs-doctag { color: #a5d6ff; }
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id { color: #d2a8ff; }
+
+.hljs-type,
+.hljs-class .hljs-title { color: #ffa657; }
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute { color: #7ee787; }
+
+.hljs-regexp,
+.hljs-link { color: #a5d6ff; }
+
+.hljs-symbol,
+.hljs-bullet { color: #ffa657; }
+
+.hljs-built_in,
+.hljs-builtin-name { color: #79c0ff; }
+
+.hljs-meta { color: #8b949e; }
+
+.hljs-deletion { background: #490202; }
+
+.hljs-addition { background: #042601; }
+
+.hljs-emphasis { font-style: italic; }
+
+.hljs-strong { font-weight: bold; }
+
 .prose-brutal blockquote {
   border-left: 8px solid #000;
   background: #facc15;
-  padding: 1rem;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
   font-style: normal;
   font-weight: bold;
+}
+
+.prose-brutal blockquote p:last-child {
+  margin-bottom: 0;
 }
 
 .prose-brutal ul,
 .prose-brutal ol {
   border: 4px solid #000;
-  padding: 1rem 1rem 1rem 2rem;
-  margin: 1rem 0;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.prose-brutal ul li,
+.prose-brutal ol li {
+  padding: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.prose-brutal ul li:first-child,
+.prose-brutal ol li:first-child {
+  padding-top: 0;
+}
+
+.prose-brutal ul li:last-child,
+.prose-brutal ol li:last-child {
+  padding-bottom: 0;
+}
+
+.prose-brutal ul li p,
+.prose-brutal ol li p {
+  margin: 0;
 }
 
 .prose-brutal hr {
   border: none;
   border-top: 4px solid #000;
-  margin: 2rem 0;
+  margin: 2.5rem 0;
 }
 
 .prose-brutal table {
   border: 4px solid #000;
+  margin: 1.5rem 0;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .prose-brutal th {
   background: #000;
   color: #fff;
   text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  vertical-align: middle;
 }
 
 .prose-brutal td {
   border: 2px solid #000;
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.prose-brutal td p,
+.prose-brutal th p {
+  margin: 0;
 }

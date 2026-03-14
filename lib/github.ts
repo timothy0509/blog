@@ -1,53 +1,89 @@
-const GITHUB_API_BASE = 'https://api.github.com';
-const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
+import matter from 'gray-matter';
+
 const REPO_OWNER = 'timothy0509';
 const REPO_NAME = 'writeups';
+const BRANCH = 'main';
 
-interface GitHubTreeItem {
+export interface WriteupInfo {
+  slug: string[];
+  event: string;
+  category: string;
+  title: string;
   path: string;
-  type: string;
-  sha: string;
 }
 
-interface GitHubTreeResponse {
-  tree: GitHubTreeItem[];
+export interface WriteupDetail extends WriteupInfo {
+  content: string;
+  frontmatter: Record<string, unknown>;
 }
 
-export async function fetchWriteupTree(): Promise<string[]> {
-  const response = await fetch(
-    `${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'timothy-blog/1.0',
-      },
-    }
-  );
+export async function getWriteups(): Promise<WriteupInfo[]> {
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
+  const res = await fetch(url, {
+    next: { revalidate: 600 },
+    headers: {
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch GitHub tree: ${response.status}`);
+  if (!res.ok) {
+    console.error('Failed to fetch GitHub tree', res.statusText);
+    return [];
   }
 
-  const data: GitHubTreeResponse = await response.json();
-  
-  return data.tree
-    .filter((item) => item.type === 'blob' && item.path.endsWith('.md'))
-    .map((item) => item.path);
-}
+  const data = await res.json();
+  const writeups: WriteupInfo[] = [];
 
-export async function fetchWriteupContent(path: string): Promise<string> {
-  const response = await fetch(
-    `${GITHUB_RAW_BASE}/${REPO_OWNER}/${REPO_NAME}/main/${path}`,
-    {
-      headers: {
-        'User-Agent': 'timothy-blog/1.0',
-      },
+  for (const item of data.tree) {
+    if (item.type === 'blob' && item.path.endsWith('.md')) {
+      const parts = item.path.split('/');
+      if (parts.length >= 3) {
+        const event = parts[0];
+        const category = parts[1];
+        const titleWithExt = parts[parts.length - 1];
+        const title = titleWithExt.replace(/\.md$/, '');
+        const slug = parts.map((p: string) => p.replace(/\.md$/, ''));
+
+        writeups.push({
+          slug,
+          event,
+          category,
+          title,
+          path: item.path,
+        });
+      }
     }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch writeup content: ${response.status}`);
   }
 
-  return response.text();
+  return writeups;
+}
+
+export async function getWriteupContent(filePath: string): Promise<WriteupDetail | null> {
+  const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${encodeURI(filePath)}`;
+  const res = await fetch(url, {
+    next: { revalidate: 600 },
+  });
+
+  if (!res.ok) {
+    return null;
+  }
+
+  const text = await res.text();
+  const { data: frontmatter, content } = matter(text);
+
+  const parts = filePath.split('/');
+  const event = parts[0];
+  const category = parts[1];
+  const title = parts[parts.length - 1].replace(/\.md$/, '');
+  const slug = parts.map(p => p.replace(/\.md$/, ''));
+
+  return {
+    slug,
+    event,
+    category,
+    title,
+    path: filePath,
+    content,
+    frontmatter,
+  };
 }
