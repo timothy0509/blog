@@ -2,8 +2,9 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-inter: var(--font-inter);
+  --font-dm-sans: var(--font-dm-sans);
   --font-playfair: var(--font-playfair);
+  --font-geist-mono: var(--font-geist-mono);
 }
 
 @layer base {
@@ -36,7 +37,7 @@
   font-weight: 500;
   color: #8b949e;
   text-transform: lowercase;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   pointer-events: none;
   z-index: 10;
 }

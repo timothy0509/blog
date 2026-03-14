@@ -6,7 +6,7 @@ export default function Theme2List({ writeups }: { writeups: WriteupInfo[] }) {
   const events = Array.from(new Set(writeups.map(w => w.event)));
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-[family-name:var(--font-inter)] selection:bg-zinc-900 selection:text-white">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-[family-name:var(--font-dm-sans)] selection:bg-zinc-900 selection:text-white">
       <div className="max-w-5xl mx-auto px-6 py-24">
         <header className="mb-24 flex items-center justify-between">
           <Link href="/2" className="font-[family-name:var(--font-playfair)] text-2xl font-bold hover:opacity-70 transition-opacity">

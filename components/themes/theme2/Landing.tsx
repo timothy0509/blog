@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function Theme2Landing({ writeups }: { writeups: WriteupInfo[] }) {
   return (
-    <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-[family-name:var(--font-inter)] selection:bg-zinc-900 selection:text-white">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-[family-name:var(--font-dm-sans)] selection:bg-zinc-900 selection:text-white">
       <div className="max-w-5xl mx-auto px-6 py-24">
         <header className="mb-24">
           <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-7xl font-bold tracking-tight mb-6">

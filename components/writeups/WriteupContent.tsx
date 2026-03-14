@@ -16,7 +16,7 @@ export default function WriteupContent({ content }: { content: string }) {
         prose-h4:text-xl prose-h4:mt-6 prose-h4:mb-2
         prose-p:leading-relaxed prose-p:text-zinc-700 prose-p:mb-6
         prose-a:underline prose-a:decoration-zinc-300 prose-a:underline-offset-4 hover:prose-a:decoration-zinc-900 prose-a:transition-colors prose-a:text-zinc-900
-        prose-code:bg-zinc-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm prose-code:font-medium prose-code:before:content-none prose-code:after:content-none prose-code:border prose-code:border-zinc-200
+        prose-code:bg-zinc-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm prose-code:font-medium prose-code:font-[family-name:var(--font-geist-mono)] prose-code:before:content-none prose-code:after:content-none prose-code:border prose-code:border-zinc-200
         prose-pre:bg-zinc-900 prose-pre:text-zinc-100 prose-pre:shadow-lg prose-pre:rounded-xl prose-pre:overflow-x-auto
         prose-blockquote:border-l-zinc-300 prose-blockquote:bg-zinc-50 prose-blockquote:py-1 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:text-zinc-600 prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:my-6
         prose-img:rounded-xl prose-img:border prose-img:border-zinc-200 prose-img:shadow-sm
