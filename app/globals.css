@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-inter: var(--font-inter);
+  --font-playfair: var(--font-playfair);
+}
+
+@layer base {
+  body {
+    @apply bg-[#fafafa] text-zinc-900;
+  }
+}
+
+.markdown-content pre {
+  @apply overflow-x-auto;
+}
+
+/* Fix white-on-white text in code blocks - remove prose-code background from blocks */
+.markdown-content pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Code block language badge styling */
+.code-block-wrapper {
+  position: relative;
+}
+
+.code-language-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #8b949e;
+  text-transform: lowercase;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  pointer-events: none;
+  z-index: 10;
+}
