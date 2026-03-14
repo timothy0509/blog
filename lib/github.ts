@@ -20,7 +20,7 @@ export interface WriteupDetail extends WriteupInfo {
 export async function getWriteups(): Promise<WriteupInfo[]> {
   const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
   const res = await fetch(url, {
-    next: { revalidate: 3600 }, // Cache for 1 hour
+    next: { revalidate: 600 }, // Cache for 10 minutes
     headers: {
       // Add GitHub token if rate-limited, but we'll assume unauthenticated works for now
       Accept: 'application/vnd.github.v3+json',
@@ -63,7 +63,7 @@ export async function getWriteups(): Promise<WriteupInfo[]> {
 export async function getWriteupContent(filePath: string): Promise<WriteupDetail | null> {
   const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${encodeURI(filePath)}`;
   const res = await fetch(url, {
-    next: { revalidate: 3600 },
+    next: { revalidate: 600 },
   });
 
   if (!res.ok) {
