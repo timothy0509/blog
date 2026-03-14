@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getWriteups, getWriteupContent } from '@/lib/github';
+import { getCategoryColor } from '@/lib/colors';
 import Link from 'next/link';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
@@ -42,6 +43,7 @@ export default async function WriteupDetailPage({
   }
 
   const readingTime = calculateReadingTime(detail.content);
+  const categoryColor = getCategoryColor(detail.category);
 
   return (
     <article className="max-w-4xl mx-auto">
@@ -59,7 +61,7 @@ export default async function WriteupDetailPage({
           <span className="font-bold bg-yellow-400 border-4 border-black px-4 py-2 text-xl transform -rotate-1">
             {detail.event}
           </span>
-          <span className="font-bold bg-white border-4 border-black px-4 py-2 text-xl transform rotate-1">
+          <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-xl transform rotate-1`}>
             {detail.category}
           </span>
         </div>
