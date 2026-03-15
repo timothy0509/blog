@@ -1,12 +1,18 @@
 import Link from 'next/link';
 import { getWriteups } from '@/lib/github';
 import WriteupCard from '@/components/WriteupCard';
+import FeaturedWriteupCard from '@/components/FeaturedWriteupCard';
+import { getFeaturedWriteup } from '@/lib/utils';
 
 export const revalidate = 600;
 
 export default async function Home() {
   const writeups = await getWriteups();
-  const recentWriteups = writeups.slice(0, 6);
+  const featuredWriteup = getFeaturedWriteup(writeups);
+  const featuredSlug = featuredWriteup?.slug.join('/');
+  const recentWriteups = writeups
+    .filter((w) => w.slug.join('/') !== featuredSlug)
+    .slice(0, 6);
 
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-12">
@@ -20,6 +26,15 @@ export default async function Home() {
           <p><span className="text-[#EF4444]">Taming vulnerabilities</span>, one flag at a time.</p>
         </div>
       </section>
+
+      {featuredWriteup && (
+        <section>
+          <div className="border-b-4 border-black pb-4 mb-6">
+            <h2 className="text-h2 font-display uppercase tracking-tight">Featured</h2>
+          </div>
+          <FeaturedWriteupCard writeup={featuredWriteup} />
+        </section>
+      )}
 
       <section className="mb-8">
         <div className="flex justify-between items-end border-b-4 border-black pb-4 mb-8">
@@ -35,13 +50,8 @@ export default async function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {recentWriteups.map((w, index) => (
-            <div 
-              key={w.path} 
-              className={index === 0 ? 'md:col-span-2' : ''}
-            >
-              <WriteupCard writeup={w} />
-            </div>
+          {recentWriteups.map((w) => (
+            <WriteupCard key={w.path} writeup={w} />
           ))}
         </div>
       </section>
