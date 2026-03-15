@@ -10,12 +10,11 @@ export interface TOCHeading {
 
 interface TableOfContentsProps {
   headings: TOCHeading[];
-  isCollapsed: boolean;
-  onToggle: () => void;
 }
 
-export default function TableOfContents({ headings, isCollapsed, onToggle }: TableOfContentsProps) {
+export default function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,13 +54,13 @@ export default function TableOfContents({ headings, isCollapsed, onToggle }: Tab
           Table of Contents
         </h3>
         <button
-          onClick={onToggle}
+          onClick={() => setIsCollapsed(!isCollapsed)}
           className="border-l-4 border-black px-3 font-bold text-sm hover:bg-black hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none"
           aria-expanded={!isCollapsed}
           aria-label={isCollapsed ? 'Show table of contents' : 'Hide table of contents'}
           title={isCollapsed ? 'Show TOC' : 'Hide TOC'}
         >
-          {isCollapsed ? '◀' : '▶'}
+          {isCollapsed ? '▶' : '◀'}
         </button>
       </div>
 

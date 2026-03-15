@@ -11,7 +11,6 @@ interface WriteupContentProps {
 
 export default function WriteupContent({ content, headings }: WriteupContentProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (headings.length === 0) {
     return <MarkdownRenderer content={content} />;
@@ -38,20 +37,12 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
         />
       )}
 
-      {/* Desktop TOC - positioned in the margin, doesn't affect content width */}
+      {/* Desktop TOC - sticky, starts in flow, sticks to top-right */}
       <aside
-        className={`
-          hidden lg:block fixed top-20 right-4 z-30
-          transition-all duration-200 ease-in-out
-          ${isCollapsed ? 'opacity-50 hover:opacity-100' : ''}
-        `}
+        className="hidden lg:block sticky top-20 float-right -mr-80 w-72 z-30"
         aria-label="Table of contents sidebar"
       >
-        <TableOfContents 
-          headings={headings} 
-          isCollapsed={isCollapsed} 
-          onToggle={() => setIsCollapsed(!isCollapsed)} 
-        />
+        <TableOfContents headings={headings} />
       </aside>
 
       {/* Mobile TOC sidebar */}
@@ -71,14 +62,10 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
             Close ✕
           </button>
         </div>
-        <TableOfContents 
-          headings={headings} 
-          isCollapsed={false} 
-          onToggle={() => {}} 
-        />
+        <TableOfContents headings={headings} />
       </aside>
 
-      {/* Content - no padding changes, width stays constant */}
+      {/* Content */}
       <div>
         <MarkdownRenderer content={content} />
       </div>
