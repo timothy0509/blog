@@ -1,5 +1,6 @@
 'use client';
 
+import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryColor } from '@/lib/colors';
 
 interface FilterSidebarProps {
@@ -24,62 +25,125 @@ export default function FilterSidebar({
   isOpen,
 }: FilterSidebarProps) {
   return (
-    <aside className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-72 shrink-0 md:sticky md:top-24 md:h-fit pr-0 md:pr-6`}>
-      <div className="mb-8">
+    <motion.aside
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+      className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-72 shrink-0 md:sticky md:top-24 md:h-fit pr-0 md:pr-6`}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+        className="mb-8"
+      >
         <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">Categories</h3>
-        <div className="flex flex-wrap md:flex-col gap-2">
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={{
+            initial: {},
+            animate: {
+              transition: {
+                staggerChildren: 0.03,
+                delayChildren: 0.2,
+              },
+            },
+          }}
+          className="flex flex-wrap md:flex-col gap-2"
+        >
           {categories.map((cat) => {
             const color = getCategoryColor(cat);
             const isSelected = selectedCategory === cat;
             return (
-              <button
+              <motion.button
                 key={cat}
+                variants={{
+                  initial: { opacity: 0, scale: 0.9, rotate: -3 },
+                  animate: { opacity: 1, scale: 1, rotate: 0 },
+                }}
+                transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
                 onClick={() => onCategoryChange(isSelected ? null : cat)}
                 aria-pressed={isSelected}
+                whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
+                whileTap={{ scale: 0.95 }}
                 className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 ${color.bg} ${color.text} ${
                   isSelected 
                     ? 'shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]' 
-                    : 'hover:shadow-[4px_4px_0_0_#000] hover:-translate-y-0.5 hover:-translate-x-0.5'
+                    : 'hover:shadow-[4px_4px_0_0_#000]'
                 }`}
               >
                 {cat}
-              </button>
+              </motion.button>
             );
           })}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.25 }}
+        className="mb-8"
+      >
         <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">Events</h3>
-        <div className="flex flex-wrap md:flex-col gap-2">
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={{
+            initial: {},
+            animate: {
+              transition: {
+                staggerChildren: 0.02,
+                delayChildren: 0.3,
+              },
+            },
+          }}
+          className="flex flex-wrap md:flex-col gap-2"
+        >
           {events.map((event) => {
             const isSelected = selectedEvent === event;
             return (
-              <button
+              <motion.button
                 key={event}
+                variants={{
+                  initial: { opacity: 0, scale: 0.9 },
+                  animate: { opacity: 1, scale: 1 },
+                }}
+                transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
                 onClick={() => onEventChange(isSelected ? null : event)}
                 aria-pressed={isSelected}
+                whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
+                whileTap={{ scale: 0.95 }}
                 className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 ${
                   isSelected 
                     ? 'bg-[#DFE104] text-black shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]' 
-                    : 'bg-white hover:bg-[#DFE104] hover:shadow-[4px_4px_0_0_#000] hover:-translate-y-0.5 hover:-translate-x-0.5'
+                    : 'bg-white hover:bg-[#DFE104] hover:shadow-[4px_4px_0_0_#000]'
                 }`}
               >
                 {event}
-              </button>
+              </motion.button>
             );
           })}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      {(selectedCategory || selectedEvent) && (
-        <button
-          onClick={onClear}
-          className="border-4 border-black px-4 py-2 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
-        >
-          Clear Filters
-        </button>
-      )}
-    </aside>
+      <AnimatePresence>
+        {(selectedCategory || selectedEvent) && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onClear}
+            className="border-4 border-black px-4 py-2 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000]"
+          >
+            Clear Filters
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </motion.aside>
   );
 }
