@@ -10,7 +10,8 @@ interface WriteupContentProps {
 }
 
 export default function WriteupContent({ content, headings }: WriteupContentProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isDesktopOpen, setIsDesktopOpen] = useState(true);
 
   if (headings.length === 0) {
     return <MarkdownRenderer content={content} />;
@@ -18,47 +19,80 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
 
   return (
     <div className="relative">
-      {/* Mobile toggle */}
+      {/* Mobile toggle button - fixed at bottom right */}
       <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed bottom-4 right-4 z-40 border-4 border-black px-4 py-3 font-bold uppercase text-sm bg-[#DFE104] shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none"
-        aria-expanded={isSidebarOpen}
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className="lg:hidden fixed bottom-4 right-4 z-50 border-4 border-black px-4 py-3 font-bold uppercase text-sm bg-[#DFE104] shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none"
+        aria-expanded={isMobileOpen}
         aria-label="Toggle table of contents"
       >
-        {isSidebarOpen ? 'Close' : 'Contents'}
+        {isMobileOpen ? 'Close' : 'Contents'}
       </button>
 
       {/* Mobile overlay */}
-      {isSidebarOpen && (
+      {isMobileOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-30"
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={() => setIsMobileOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* Mobile TOC sidebar */}
+      {/* Content - keeps original max-w-4xl mx-auto layout */}
+      <div className="max-w-4xl mx-auto">
+        <MarkdownRenderer content={content} />
+      </div>
+
+      {/* TOC Sidebar - positioned absolutely on the right, outside content flow */}
       <aside
         className={`
-          lg:hidden fixed top-16 right-0 w-72 h-[calc(100vh-4rem)] overflow-y-auto bg-white border-l-4 border-black p-4 z-30
+          fixed z-40 bg-white border-4 border-black shadow-[8px_8px_0_0_#000]
+          /* Mobile: slide from right */
+          top-16 right-0 w-72 h-[calc(100vh-4rem)] overflow-y-auto
           transition-transform duration-200 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
+          lg:translate-x-0
+          ${isMobileOpen ? 'translate-x-0' : 'translate-x-full'}
+          /* Desktop: absolute positioning, only visible when open */
+          lg:absolute lg:top-0 lg:right-0 lg:h-auto lg:max-h-[calc(100vh-2rem)] lg:sticky lg:top-20
+          lg:w-72 lg:border-l-4 lg:border-t-0 lg:border-r-4 lg:border-b-4
+          lg:transition-all lg:duration-200
+          ${isDesktopOpen ? 'lg:opacity-100 lg:visible lg:translate-x-0' : 'lg:opacity-0 lg:invisible lg:translate-x-4'}
         `}
         aria-label="Table of contents sidebar"
       >
-        <div className="mb-4">
+        {/* Desktop toggle button - integrated in header */}
+        <div className="flex items-center justify-between border-b-4 border-black bg-white">
+          <h3 className="px-4 py-3 font-bold uppercase text-sm flex-1">
+            Table of Contents
+          </h3>
           <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="w-full border-4 border-black px-4 py-3 font-bold uppercase text-sm bg-white shadow-[4px_4px_0_0_#000] hover:bg-black hover:text-white transition-colors"
+            onClick={() => setIsDesktopOpen(!isDesktopOpen)}
+            className="hidden lg:flex px-4 py-3 border-l-4 border-black hover:bg-black hover:text-white transition-colors font-bold"
+            aria-label={isDesktopOpen ? 'Hide table of contents' : 'Show table of contents'}
+            title={isDesktopOpen ? 'Hide' : 'Show'}
           >
-            Close ✕
+            {isDesktopOpen ? '−' : '+'}
           </button>
         </div>
-        <TableOfContents headings={headings} />
+
+        {/* TOC content - only visible when open on desktop */}
+        <div className={`${isDesktopOpen ? 'block' : 'lg:hidden'}`}>
+          <TableOfContents headings={headings} />
+        </div>
       </aside>
 
-      {/* Content */}
-      <MarkdownRenderer content={content} />
+      {/* Desktop show button - visible when TOC is collapsed */}
+      <button
+        onClick={() => setIsDesktopOpen(true)}
+        className={`
+          hidden lg:flex fixed right-4 top-20 z-40 items-center gap-2 border-4 border-black px-3 py-2 font-bold uppercase text-xs bg-[#DFE104] shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none
+          ${isDesktopOpen ? 'lg:opacity-0 lg:invisible' : 'lg:opacity-100 lg:visible'}
+        `}
+        aria-label="Show table of contents"
+      >
+        <span>Table of Contents</span>
+        <span>+</span>
+      </button>
     </div>
   );
 }
