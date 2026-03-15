@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import { getWriteups, getWriteupContent } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
 import { formatWriteupDate } from '@/lib/date';
-import { extractHeadings } from '@/lib/toc';
 import Link from 'next/link';
 import WriteupContent from '@/components/WriteupContent';
 import ReadingProgress from '@/components/ReadingProgress';
@@ -47,7 +46,6 @@ export default async function WriteupDetailPage({
 
   const readingTime = calculateReadingTime(detail.content);
   const categoryColor = getCategoryColor(detail.category);
-  const headings = extractHeadings(detail.content);
   const pageUrl = `https://blog.hkjc.uk/writeups/${detail.slug.map(s => encodeURIComponent(s)).join('/')}`;
 
   return (
@@ -95,7 +93,7 @@ export default async function WriteupDetailPage({
           <ShareButtons title={detail.title} url={pageUrl} />
         </header>
 
-        <WriteupContent content={detail.content} headings={headings} />
+        <WriteupContent content={detail.content} />
 
         <div className="mt-16 pt-8 border-t-[6px] border-black">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
