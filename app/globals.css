@@ -357,7 +357,6 @@ body {
   color: #888;
   text-transform: uppercase;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  pointer-events: none;
   z-index: 10;
 }
 
