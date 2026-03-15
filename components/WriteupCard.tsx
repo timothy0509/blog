@@ -4,18 +4,19 @@ import { getCategoryColor } from '@/lib/colors';
 
 interface WriteupCardProps {
   writeup: WriteupInfo;
+  featured?: boolean;
 }
 
-export default function WriteupCard({ writeup }: WriteupCardProps) {
+export default function WriteupCard({ writeup, featured = false }: WriteupCardProps) {
   const categoryColor = getCategoryColor(writeup.category);
 
   return (
-    <article className="border-8 border-black p-6 bg-white shadow-[var(--shadow-brutal)] flex flex-col gap-4 hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_0_#000] transition-all">
-      <div className="flex flex-wrap gap-2 border-b-4 border-black pb-4">
-        <span className="font-bold bg-yellow-400 border-2 border-black px-2 py-1">
+    <article className={`brutal-card p-6 flex flex-col gap-4 graphic-corner ${featured ? 'featured-writeup' : ''}`}>
+      <div className="flex flex-wrap gap-2 border-b-4 border-black dark:border-white pb-4">
+        <span className="stamp-label bg-yellow-400">
           {writeup.event}
         </span>
-        <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-2 border-black px-2 py-1 text-sm`}>
+        <span className={`stamp-label ${categoryColor.bg} ${categoryColor.text}`}>
           {writeup.category}
         </span>
       </div>
@@ -27,7 +28,7 @@ export default function WriteupCard({ writeup }: WriteupCardProps) {
       <div className="flex justify-between items-center mt-auto pt-4">
         <Link
           href={`/writeups/${writeup.slug.join('/')}`}
-          className="bg-black text-white text-center py-2 px-4 font-bold uppercase hover:bg-yellow-400 hover:text-black border-4 border-transparent hover:border-black transition-colors"
+          className="bg-black text-white text-center py-2 px-4 font-bold uppercase hover:bg-yellow-400 hover:text-black border-4 border-transparent hover:border-black transition-colors dark:bg-white dark:text-black dark:hover:bg-yellow-400 press-button"
         >
           Read &rarr;
         </Link>

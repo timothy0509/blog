@@ -50,18 +50,18 @@ export default async function WriteupDetailPage({
       <div className="mb-8">
         <Link
           href="/writeups"
-          className="inline-block border-4 border-black px-4 py-2 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[var(--shadow-brutal)] mb-8 hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+          className="inline-block border-4 border-black dark:border-white px-4 py-2 font-bold uppercase bg-white dark:bg-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black shadow-[var(--shadow-brutal)] mb-8 hover:translate-x-1 hover:translate-y-1 hover:shadow-none press-button transition-none"
         >
           &larr; BACK TO WRITEUPS
         </Link>
       </div>
 
-      <header className="border-b-[8px] border-black pb-8 mb-8">
+      <header className="border-b-[8px] border-black dark:border-white pb-8 mb-8">
         <div className="flex flex-wrap gap-3 mb-6">
-          <span className="font-bold bg-yellow-400 border-4 border-black px-4 py-2 text-xl transform -rotate-1">
+          <span className="stamp-label bg-yellow-400">
             {detail.event}
           </span>
-          <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-xl transform rotate-1`}>
+          <span className={`stamp-label ${categoryColor.bg} ${categoryColor.text}`}>
             {detail.category}
           </span>
         </div>
@@ -70,15 +70,15 @@ export default async function WriteupDetailPage({
           {detail.title}
         </h1>
 
-        <div className="inline-block bg-black text-white px-4 py-2 font-bold text-lg border-4 border-black transform -rotate-1">
+        <div className="inline-block bg-black dark:bg-white text-white dark:text-black px-4 py-2 font-bold text-lg border-4 border-black dark:border-white transform -rotate-1">
           {readingTime} min read
         </div>
       </header>
 
       <MarkdownRenderer content={detail.content} />
 
-      <div className="mt-16 pt-8 border-t-[8px] border-black flex justify-center">
-        <div className="bg-black text-white p-6 font-bold text-center text-xl max-w-lg shadow-[8px_8px_0_0_#facc15] border-4 border-white">
+      <div className="mt-16 pt-8 border-t-[8px] border-black dark:border-white flex justify-center">
+        <div className="bg-black dark:bg-white text-white dark:text-black p-6 font-bold text-center text-xl max-w-lg border-4 border-white dark:border-black shadow-[8px_8px_0_0_#facc15]">
           FLAG CAPTURED
         </div>
       </div>

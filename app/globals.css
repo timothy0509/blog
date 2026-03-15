@@ -13,22 +13,57 @@
 :root {
   --background: #f0f0f0;
   --foreground: #000000;
+  --bg: #f0f0f0;
+  --fg: #000000;
+  --card: #ffffff;
+  --accent: #facc15;
+  --border: #000000;
+  --muted: #666666;
+}
+
+[data-theme="dark"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --bg: #000000;
+  --fg: #ffffff;
+  --card: #1a1a1a;
+  --accent: #facc15;
+  --border: #ffffff;
+  --muted: #999999;
 }
 
 .bg-brutal-header {
   background: 
+    linear-gradient(135deg, var(--accent) 25%, transparent 25%),
+    linear-gradient(225deg, #ef4444 25%, transparent 25%),
+    linear-gradient(45deg, #3b82f6 25%, transparent 25%),
+    linear-gradient(315deg, var(--border) 25%, var(--accent) 25%);
+  background-size: 40px 40px;
+  background-color: var(--accent);
+}
+
+[data-theme="dark"] .bg-brutal-header {
+  background: 
     linear-gradient(135deg, #facc15 25%, transparent 25%),
     linear-gradient(225deg, #ef4444 25%, transparent 25%),
     linear-gradient(45deg, #3b82f6 25%, transparent 25%),
-    linear-gradient(315deg, #000 25%, #facc15 25%);
+    linear-gradient(315deg, #fff 25%, #facc15 25%);
   background-size: 40px 40px;
   background-color: #facc15;
 }
 
 .bg-brutal-footer {
   background: 
-    repeating-linear-gradient(0deg, transparent, transparent 30px, #1a1a1a 30px, #1a1a1a 32px),
-    repeating-linear-gradient(90deg, transparent, transparent 30px, #1a1a1a 30px, #1a1a1a 32px),
+    repeating-linear-gradient(0deg, transparent, transparent 30px, var(--fg) 30px, var(--fg) 32px),
+    repeating-linear-gradient(90deg, transparent, transparent 30px, var(--fg) 30px, var(--fg) 32px),
+    repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(239, 68, 68, 0.3) 15px, rgba(239, 68, 68, 0.3) 17px);
+  background-color: var(--bg);
+}
+
+[data-theme="dark"] .bg-brutal-footer {
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 30px, #333 30px, #333 32px),
+    repeating-linear-gradient(90deg, transparent, transparent 30px, #333 30px, #333 32px),
     repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(239, 68, 68, 0.3) 15px, rgba(239, 68, 68, 0.3) 17px);
   background-color: #000;
 }
@@ -43,6 +78,10 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
+[data-theme="dark"] .noise-overlay::before {
+  opacity: 0.08;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -50,17 +89,158 @@ body {
   -webkit-font-smoothing: none;
 }
 
+[data-theme="dark"] body {
+  -webkit-font-smoothing: antialiased;
+}
+
 * {
   border-radius: 0 !important;
 }
 
+.graphic-corner {
+  position: relative;
+}
+
+.graphic-corner::before,
+.graphic-corner::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--border);
+  border-style: solid;
+}
+
+.graphic-corner::before {
+  top: -4px;
+  left: -4px;
+  border-width: 4px 0 0 4px;
+}
+
+.graphic-corner::after {
+  bottom: -4px;
+  right: -4px;
+  border-width: 0 4px 4px 0;
+}
+
+.stamp-label {
+  display: inline-block;
+  transform: rotate(-3deg);
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 3px solid var(--border);
+  padding: 0.25rem 0.75rem;
+  position: relative;
+}
+
+.stamp-label::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px dashed var(--border);
+  pointer-events: none;
+}
+
+.diagonal-rule {
+  position: relative;
+  overflow: hidden;
+}
+
+.diagonal-rule::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -50px;
+  width: 100px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 8px,
+    var(--accent) 8px,
+    var(--accent) 16px
+  );
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.brutal-card {
+  background: var(--card);
+  border: 4px solid var(--border);
+  box-shadow: var(--shadow-brutal);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.brutal-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0 0 var(--border);
+}
+
+.brutal-card:active {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 0 var(--border);
+}
+
+[data-theme="dark"] .brutal-card {
+  border-color: #fff;
+  box-shadow: 8px 8px 0 0 #facc15;
+}
+
+[data-theme="dark"] .brutal-card:hover {
+  box-shadow: 12px 12px 0 0 #facc15;
+}
+
+[data-theme="dark"] .brutal-card:active {
+  box-shadow: 4px 4px 0 0 #facc15;
+}
+
+.featured-writeup {
+  grid-column: span 2;
+  position: relative;
+}
+
+.featured-writeup::before {
+  content: 'FEATURED';
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  background: var(--accent);
+  color: var(--border);
+  padding: 4px 12px;
+  font-weight: bold;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  transform: rotate(-3deg);
+  z-index: 10;
+  border: 3px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .featured-writeup {
+    grid-column: span 1;
+  }
+}
+
+.press-button {
+  transition: transform 0s, box-shadow 0s;
+}
+
+.press-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none !important;
+}
+
 /* Brutalist prose styles for markdown content */
 .prose-brutal.prose {
-  --tw-prose-body: #000;
-  --tw-prose-headings: #000;
-  --tw-prose-links: #000;
-  --tw-prose-bold: #000;
+  --tw-prose-body: var(--fg);
+  --tw-prose-headings: var(--fg);
+  --tw-prose-links: var(--fg);
+  --tw-prose-bold: var(--fg);
   --tw-prose-code: #c7254e;
+}
+
+[data-theme="dark"] .prose-brutal.prose {
+  --tw-prose-code: #ff6b6b;
 }
 
 .prose-brutal.prose p {
@@ -100,34 +280,43 @@ body {
   margin-bottom: 0.625rem;
 }
 
-/* First heading in content should not have top margin */
 .prose-brutal.prose > :first-child {
   margin-top: 0;
 }
 
 .prose-brutal a {
-  color: #000;
-  border-bottom: 4px solid #000;
+  color: var(--fg);
+  border-bottom: 4px solid var(--fg);
   transition: background-color 0.1s;
 }
 
 .prose-brutal a:hover {
-  background-color: #facc15;
+  background-color: var(--accent);
 }
 
 .prose-brutal pre {
-  background: #000;
-  color: #fff;
-  border: 4px solid #000;
+  background: var(--bg);
+  color: var(--fg);
+  border: 4px solid var(--border);
   padding: 1.25rem;
   margin: 1.5rem 0;
   overflow-x: auto;
 }
 
+[data-theme="light"] .prose-brutal pre {
+  background: #000;
+  color: #fff;
+}
+
+[data-theme="dark"] .prose-brutal pre {
+  background: #1a1a1a;
+  border-color: #fff;
+}
+
 .prose-brutal code {
   font-family: var(--font-mono);
-  background: #f0f0f0;
-  border: 2px solid #000;
+  background: var(--card);
+  border: 2px solid var(--border);
   padding: 0.125rem 0.25rem;
 }
 
@@ -147,7 +336,7 @@ body {
   right: 0.75rem;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #888;
+  color: var(--muted);
   text-transform: uppercase;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   pointer-events: none;
@@ -201,12 +390,17 @@ body {
 .hljs-strong { font-weight: bold; }
 
 .prose-brutal blockquote {
-  border-left: 8px solid #000;
-  background: #facc15;
+  border-left: 8px solid var(--border);
+  background: var(--accent);
+  color: var(--border);
   padding: 1.25rem;
   margin: 1.5rem 0;
   font-style: normal;
   font-weight: bold;
+}
+
+[data-theme="dark"] .prose-brutal blockquote {
+  color: #000;
 }
 
 .prose-brutal blockquote p:last-child {
@@ -215,7 +409,7 @@ body {
 
 .prose-brutal ul,
 .prose-brutal ol {
-  border: 4px solid #000;
+  border: 4px solid var(--border);
   padding: 1.25rem 1.25rem 1.25rem 2.5rem;
   margin: 1.5rem 0;
 }
@@ -243,28 +437,33 @@ body {
 
 .prose-brutal hr {
   border: none;
-  border-top: 4px solid #000;
+  border-top: 4px solid var(--border);
   margin: 2.5rem 0;
 }
 
 .prose-brutal table {
-  border: 4px solid #000;
+  border: 4px solid var(--border);
   margin: 1.5rem 0;
   width: 100%;
   border-collapse: collapse;
 }
 
 .prose-brutal th {
-  background: #000;
-  color: #fff;
+  background: var(--bg);
+  color: var(--fg);
   text-transform: uppercase;
   padding: 0.75rem 1rem;
   text-align: left;
   vertical-align: middle;
 }
 
+[data-theme="light"] .prose-brutal th {
+  background: #000;
+  color: #fff;
+}
+
 .prose-brutal td {
-  border: 2px solid #000;
+  border: 2px solid var(--border);
   padding: 0.75rem 1rem;
   vertical-align: middle;
 }

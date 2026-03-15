@@ -42,7 +42,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <header className="mb-8 pb-6 border-b-[6px] border-black">
+      <header className="mb-8 pb-6 border-b-[6px] border-black dark:border-white">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-5xl md:text-7xl font-[family-name:var(--font-impact)] uppercase leading-none mb-2">
@@ -55,7 +55,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase bg-yellow-400"
+            className="md:hidden border-4 border-black dark:border-white px-4 py-2 font-bold uppercase bg-yellow-400"
           >
             Filters {sidebarOpen ? '▲' : '▼'}
           </button>
@@ -76,11 +76,11 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
 
         <div className="flex-1">
           {filteredWriteups.length === 0 ? (
-            <div className="border-8 border-black p-8 bg-white shadow-[var(--shadow-brutal)] text-center">
+            <div className="brutal-card p-8 text-center">
               <p className="text-xl font-bold">No writeups match your filters.</p>
               <button
                 onClick={handleClear}
-                className="mt-4 border-4 border-black px-4 py-2 font-bold uppercase bg-yellow-400 hover:bg-yellow-300"
+                className="mt-4 border-4 border-black dark:border-white px-4 py-2 font-bold uppercase bg-yellow-400 hover:bg-yellow-300"
               >
                 Clear Filters
               </button>
@@ -90,14 +90,14 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               const color = getCategoryColor(w.category);
               return (
                 <Link href={`/writeups/${w.slug.join('/')}`} key={w.path} className="block group mb-6">
-                  <article className="border-8 border-black p-6 bg-white shadow-[var(--shadow-brutal)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0_0_#000] transition-all">
+                  <article className="brutal-card p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="font-bold bg-yellow-400 border-2 border-black px-3 py-1 text-sm uppercase">
+                          <span className="stamp-label bg-yellow-400">
                             {w.event}
                           </span>
-                          <span className={`font-bold border-2 border-black px-3 py-1 text-sm uppercase ${color.bg} ${color.text}`}>
+                          <span className={`stamp-label ${color.bg} ${color.text}`}>
                             {w.category}
                           </span>
                         </div>
