@@ -6,7 +6,7 @@ import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import CopyCodeButton from './CopyCodeButton';
+import LanguageBadge from './LanguageBadge';
 
 interface MarkdownRendererProps {
   content: string;
@@ -63,8 +63,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
             return (
               <div className="code-block-wrapper">
-                {language && <span className="code-language-badge">{language}</span>}
-                <CopyCodeButton code={codeContent} />
+                {language && <LanguageBadge language={language} code={codeContent} />}
                 <pre {...props}>{children}</pre>
               </div>
             );

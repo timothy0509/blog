@@ -48,7 +48,7 @@ export default async function WriteupDetailPage({
   const readingTime = calculateReadingTime(detail.content);
   const categoryColor = getCategoryColor(detail.category);
   const headings = extractHeadings(detail.content);
-  const pageUrl = `https://ctf.btimothy0509.com/writeups/${detail.slug.join('/')}`;
+  const pageUrl = `https://ctf.btimothy0509.com/writeups/${detail.slug.map(s => encodeURIComponent(s)).join('/')}`;
 
   return (
     <>
