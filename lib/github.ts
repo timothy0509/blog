@@ -10,6 +10,8 @@ export interface WriteupInfo {
   category: string;
   title: string;
   path: string;
+  createdAt: string;
+  lastModified: string;
 }
 
 export interface WriteupDetail extends WriteupInfo {
@@ -18,47 +20,25 @@ export interface WriteupDetail extends WriteupInfo {
 }
 
 export async function getWriteups(): Promise<WriteupInfo[]> {
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
+  const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/index.json`;
   const res = await fetch(url, {
     next: { revalidate: 600 },
-    headers: {
-      Accept: 'application/vnd.github.v3+json',
-    },
   });
 
   if (!res.ok) {
-    console.error('Failed to fetch GitHub tree', res.statusText);
+    console.error('Failed to fetch writeups index', res.statusText);
     return [];
   }
 
   const data = await res.json();
-  const writeups: WriteupInfo[] = [];
-
-  for (const item of data.tree) {
-    if (item.type === 'blob' && item.path.endsWith('.md')) {
-      const parts = item.path.split('/');
-      if (parts.length >= 3) {
-        const event = parts[0];
-        const category = parts[1];
-        const titleWithExt = parts[parts.length - 1];
-        const title = titleWithExt.replace(/\.md$/, '');
-        const slug = parts.map((p: string) => p.replace(/\.md$/, ''));
-
-        writeups.push({
-          slug,
-          event,
-          category,
-          title,
-          path: item.path,
-        });
-      }
-    }
-  }
-
-  return writeups;
+  return data.writeups || [];
 }
 
 export async function getWriteupContent(filePath: string): Promise<WriteupDetail | null> {
+  // Fetch dates from index
+  const writeups = await getWriteups();
+  const writeupInfo = writeups.find(w => w.path === filePath);
+  
   const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${encodeURI(filePath)}`;
   const res = await fetch(url, {
     next: { revalidate: 600 },
@@ -83,6 +63,8 @@ export async function getWriteupContent(filePath: string): Promise<WriteupDetail
     category,
     title,
     path: filePath,
+    createdAt: writeupInfo?.createdAt || '',
+    lastModified: writeupInfo?.lastModified || '',
     content,
     frontmatter,
   };

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getWriteups, getWriteupContent } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
+import { formatWriteupDate } from '@/lib/date';
 import Link from 'next/link';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
@@ -76,6 +77,12 @@ export default async function WriteupDetailPage({
           </div>
           <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]">
             <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
+          </div>
+          <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1">
+            Created: {formatWriteupDate(detail.createdAt)}
+          </div>
+          <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1">
+            Updated: {formatWriteupDate(detail.lastModified)}
           </div>
         </div>
       </header>

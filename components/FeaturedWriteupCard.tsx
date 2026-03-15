@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WriteupInfo } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
+import { formatWriteupDate } from '@/lib/date';
 
 interface FeaturedWriteupCardProps {
   writeup: WriteupInfo;
@@ -21,6 +22,10 @@ export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProp
         <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-2 border-black px-3 py-1 text-sm tracking-wide uppercase`}>
           {writeup.category}
         </span>
+      </div>
+
+      <div className="text-sm font-medium text-zinc-600 mb-4">
+        {formatWriteupDate(writeup.createdAt)}
       </div>
 
       <h2 className="text-3xl md:text-4xl font-display uppercase leading-tight tracking-tight mb-6">

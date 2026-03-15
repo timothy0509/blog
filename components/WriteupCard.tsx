@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WriteupInfo } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
+import { formatWriteupDate } from '@/lib/date';
 
 interface WriteupCardProps {
   writeup: WriteupInfo;
@@ -28,6 +29,9 @@ export default function WriteupCard({ writeup }: WriteupCardProps) {
         </Link>
       </h2>
       <div className="flex justify-between items-center mt-auto pt-4">
+        <span className="text-sm font-medium text-zinc-600">
+          {formatWriteupDate(writeup.createdAt)}
+        </span>
         <Link
           href={`/writeups/${writeup.slug.join('/')}`}
           className="bg-black text-white text-center py-2 px-4 font-bold uppercase text-sm hover:bg-[#DFE104] hover:text-black border-4 border-transparent hover:border-black transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
