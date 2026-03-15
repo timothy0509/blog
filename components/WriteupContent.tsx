@@ -37,14 +37,6 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
         />
       )}
 
-      {/* Desktop TOC - sticky, starts in flow, sticks to top-right */}
-      <aside
-        className="hidden lg:block sticky top-20 float-right -mr-80 w-72 z-30"
-        aria-label="Table of contents sidebar"
-      >
-        <TableOfContents headings={headings} />
-      </aside>
-
       {/* Mobile TOC sidebar */}
       <aside
         className={`
@@ -66,9 +58,7 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
       </aside>
 
       {/* Content */}
-      <div>
-        <MarkdownRenderer content={content} />
-      </div>
+      <MarkdownRenderer content={content} />
     </div>
   );
 }

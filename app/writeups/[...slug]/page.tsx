@@ -5,6 +5,7 @@ import { formatWriteupDate } from '@/lib/date';
 import { extractHeadings } from '@/lib/toc';
 import Link from 'next/link';
 import WriteupContent from '@/components/WriteupContent';
+import TableOfContents from '@/components/TableOfContents';
 import ReadingProgress from '@/components/ReadingProgress';
 import ShareButtons from '@/components/ShareButtons';
 
@@ -53,65 +54,85 @@ export default async function WriteupDetailPage({
   return (
     <>
       <ReadingProgress />
-      <article className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <Link
-            href="/writeups"
-            className="inline-block border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-          >
-            &larr; Back to Writeups
-          </Link>
+      
+      {/* Back button - outside the flex layout */}
+      <div className="max-w-7xl mx-auto px-4 mb-6">
+        <Link
+          href="/writeups"
+          className="inline-block border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+        >
+          &larr; Back to Writeups
+        </Link>
+      </div>
+
+      {/* Main flex layout */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex gap-8">
+          {/* Left spacer for balance */}
+          <div className="hidden xl:block w-72 flex-shrink-0" />
+          
+          {/* Main content */}
+          <article className="flex-1 min-w-0 max-w-4xl">
+            <header className="border-b-[6px] border-black pb-8 mb-8">
+              <div className="flex flex-wrap gap-3 mb-6">
+                <span className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]">
+                  {detail.event}
+                </span>
+                <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-base transform rotate-1 shadow-[4px_4px_0_0_#000]`}>
+                  {detail.category}
+                </span>
+              </div>
+
+              <h1 className="text-display font-display uppercase leading-none mb-4 tracking-tight">
+                {detail.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <div className="inline-block bg-black text-white px-4 py-2 font-bold text-base border-4 border-black transform -rotate-1">
+                  {readingTime} min read
+                </div>
+                <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]">
+                  <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
+                </div>
+                <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1">
+                  Created: {formatWriteupDate(detail.createdAt)}
+                </div>
+                <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1">
+                  Updated: {formatWriteupDate(detail.lastModified)}
+                </div>
+              </div>
+
+              <ShareButtons title={detail.title} url={pageUrl} />
+            </header>
+
+            <WriteupContent content={detail.content} headings={headings} />
+
+            <div className="mt-16 pt-8 border-t-[6px] border-black">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <div className="bg-black text-white p-6 font-bold text-center text-lg shadow-[8px_8px_0_0_#DFE104] border-4 border-[#DFE104] max-w-lg transform -rotate-1">
+                  <span className="text-2xl block mb-2">⚑</span>
+                  FLAG CAPTURED
+                </div>
+                <Link 
+                  href="/writeups" 
+                  className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
+                >
+                  Browse More Writeups&rarr;
+                </Link>
+              </div>
+            </div>
+          </article>
+
+          {/* TOC Sidebar - only on large screens */}
+          {headings.length > 0 && (
+            <aside className="hidden lg:block w-72 flex-shrink-0">
+              <div className="sticky top-20">
+                <TableOfContents headings={headings} />
+              </div>
+            </aside>
+          )}
         </div>
-
-        <header className="border-b-[6px] border-black pb-8 mb-8">
-          <div className="flex flex-wrap gap-3 mb-6">
-            <span className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]">
-              {detail.event}
-            </span>
-            <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-base transform rotate-1 shadow-[4px_4px_0_0_#000]`}>
-              {detail.category}
-            </span>
-          </div>
-
-          <h1 className="text-display font-display uppercase leading-none mb-4 tracking-tight">
-            {detail.title}
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <div className="inline-block bg-black text-white px-4 py-2 font-bold text-base border-4 border-black transform -rotate-1">
-              {readingTime} min read
-            </div>
-            <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]">
-              <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
-            </div>
-            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1">
-              Created: {formatWriteupDate(detail.createdAt)}
-            </div>
-            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1">
-              Updated: {formatWriteupDate(detail.lastModified)}
-            </div>
-          </div>
-
-          <ShareButtons title={detail.title} url={pageUrl} />
-        </header>
-
-        <WriteupContent content={detail.content} headings={headings} />
-
-        <div className="mt-16 pt-8 border-t-[6px] border-black">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <div className="bg-black text-white p-6 font-bold text-center text-lg shadow-[8px_8px_0_0_#DFE104] border-4 border-[#DFE104] max-w-lg transform -rotate-1">
-              <span className="text-2xl block mb-2">⚑</span>
-              FLAG CAPTURED
-            </div>
-            <Link 
-              href="/writeups" 
-              className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
-            >
-              Browse More Writeups&rarr;
-            </Link>
-          </div>
-        </div>
-      </article>
+      </div>
     </>
   );
 }
