@@ -295,17 +295,12 @@ body {
 }
 
 .prose-brutal pre {
-  background: var(--bg);
-  color: var(--fg);
+  background: #000;
+  color: #fff;
   border: 4px solid var(--border);
   padding: 1.25rem;
   margin: 1.5rem 0;
   overflow-x: auto;
-}
-
-[data-theme="light"] .prose-brutal pre {
-  background: #000;
-  color: #fff;
 }
 
 [data-theme="dark"] .prose-brutal pre {
