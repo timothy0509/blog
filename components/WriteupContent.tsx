@@ -42,7 +42,7 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
 
       {/* Desktop TOC - sticky position below header */}
       <div className="hidden lg:block">
-        <div className="absolute -right-4 top-0 w-72 z-30">
+        <div className="absolute -right-80 top-0 w-72 z-30">
           <div className="sticky top-20">
             {/* Toggle button - always visible */}
             <button
