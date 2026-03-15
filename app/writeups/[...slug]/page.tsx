@@ -12,7 +12,6 @@ function calculateReadingTime(text: string): number {
 }
 
 export const dynamicParams = true;
-export const revalidate = 600;
 
 export async function generateStaticParams() {
   const writeups = await getWriteups();

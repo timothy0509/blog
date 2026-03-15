@@ -4,8 +4,6 @@ import WriteupCard from '@/components/WriteupCard';
 import FeaturedWriteupCard from '@/components/FeaturedWriteupCard';
 import { getFeaturedWriteup } from '@/lib/utils';
 
-export const revalidate = 600;
-
 export default async function Home() {
   const writeups = await getWriteups();
   const featuredWriteup = getFeaturedWriteup(writeups);

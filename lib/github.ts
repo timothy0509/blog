@@ -22,7 +22,7 @@ export interface WriteupDetail extends WriteupInfo {
 export async function getWriteups(): Promise<WriteupInfo[]> {
   const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/index.json`;
   const res = await fetch(url, {
-    next: { revalidate: 600 },
+    next: { tags: ['writeups-data'], revalidate: 3600 },
   });
 
   if (!res.ok) {
@@ -41,7 +41,7 @@ export async function getWriteupContent(filePath: string): Promise<WriteupDetail
   
   const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${encodeURI(filePath)}`;
   const res = await fetch(url, {
-    next: { revalidate: 600 },
+    next: { tags: ['writeups-data'], revalidate: 3600 },
   });
 
   if (!res.ok) {
