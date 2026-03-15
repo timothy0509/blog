@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
+import { useEffect, useRef } from 'react';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -9,6 +10,72 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (document && document.activeElement instanceof HTMLElement) {
+        previouslyFocusedElementRef.current = document.activeElement;
+      }
+
+      const panel = panelRef.current;
+      if (panel) {
+        const focusableSelectors =
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusable = panel.querySelector<HTMLElement>(focusableSelectors);
+
+        // Defer focus to ensure elements are mounted
+        window.requestAnimationFrame(() => {
+          (focusable || panel).focus();
+        });
+      }
+    } else if (previouslyFocusedElementRef.current) {
+      previouslyFocusedElementRef.current.focus();
+      previouslyFocusedElementRef.current = null;
+    }
+  }, [isOpen]);
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      onClose();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const panel = panelRef.current;
+    if (!panel) {
+      return;
+    }
+
+    const focusableSelectors =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const focusableElements = Array.from(
+      panel.querySelectorAll<HTMLElement>(focusableSelectors),
+    ).filter((el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+
+    if (focusableElements.length === 0) {
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    const isShift = event.shiftKey;
+    const current = document.activeElement as HTMLElement | null;
+
+    if (!isShift && current === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    } else if (isShift && current === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    }
+  };
+
   return (
     <>
       <div
@@ -16,8 +83,15 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
+        aria-hidden="true"
       />
       <div
+        ref={panelRef}
+        role={isOpen ? 'dialog' : undefined}
+        aria-modal={isOpen ? 'true' : undefined}
+        aria-label="Mobile navigation menu"
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
         className={`fixed top-0 right-0 h-full w-72 bg-[var(--bg)] border-l-8 border-black dark:border-white z-50 transform transition-transform duration-200 md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
