@@ -45,17 +45,22 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
       <header className="mb-8 pb-6 border-b-[6px] border-black">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-5xl md:text-7xl font-[family-name:var(--font-impact)] uppercase leading-none mb-2">
+            <h1 className="text-display font-display uppercase leading-none mb-2 tracking-tight">
               All Writeups
             </h1>
-            <p className="text-xl font-bold">
-              {filteredWriteups.length} writeup{filteredWriteups.length !== 1 ? 's' : ''}
-              {(selectedCategory || selectedEvent) && ' (filtered)'}
+            <p className="text-lg font-bold">
+              <span className="bg-black text-white px-2 py-0.5">{filteredWriteups.length}</span>
+              <span className="ml-2">writeup{filteredWriteups.length !== 1 ? 's' : ''}</span>
+              {(selectedCategory || selectedEvent) && (
+                <span className="ml-2 text-sm bg-[#DFE104] px-2 py-0.5 border-2 border-black">(filtered)</span>
+              )}
             </p>
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase bg-yellow-400"
+            className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+            aria-expanded={sidebarOpen}
+            aria-controls="filter-sidebar"
           >
             Filters {sidebarOpen ? '▲' : '▼'}
           </button>
@@ -76,11 +81,11 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
 
         <div className="flex-1">
           {filteredWriteups.length === 0 ? (
-            <div className="border-8 border-black p-8 bg-white shadow-[var(--shadow-brutal)] text-center">
-              <p className="text-xl font-bold">No writeups match your filters.</p>
+            <div className="border-[6px] border-black p-8 bg-white shadow-[8px_8px_0_0_#000] text-center">
+              <p className="text-xl font-bold mb-4">No writeups match your filters.</p>
               <button
                 onClick={handleClear}
-                className="mt-4 border-4 border-black px-4 py-2 font-bold uppercase bg-yellow-400 hover:bg-yellow-300"
+                className="border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
               >
                 Clear Filters
               </button>
@@ -90,24 +95,24 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               const color = getCategoryColor(w.category);
               return (
                 <Link href={`/writeups/${w.slug.join('/')}`} key={w.path} className="block group mb-6">
-                  <article className="border-8 border-black p-6 bg-white shadow-[var(--shadow-brutal)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0_0_#000] transition-all">
+                  <article className="border-[6px] border-black p-5 bg-white shadow-[8px_8px_0_0_#000] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0_0_#000] hover:rotate-[-0.5deg] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#000] transition-all duration-150">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="font-bold bg-yellow-400 border-2 border-black px-3 py-1 text-sm uppercase">
+                          <span className="font-bold bg-[#DFE104] border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide">
                             {w.event}
                           </span>
-                          <span className={`font-bold border-2 border-black px-3 py-1 text-sm uppercase ${color.bg} ${color.text}`}>
+                          <span className={`font-bold border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide ${color.bg} ${color.text}`}>
                             {w.category}
                           </span>
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-[family-name:var(--font-impact)] uppercase group-hover:underline decoration-4 underline-offset-4">
+                        <h3 className="text-xl sm:text-2xl font-display uppercase group-hover:underline decoration-[3px] underline-offset-4 tracking-tight">
                           {w.title}
                         </h3>
                       </div>
-                      <div className="flex items-center font-bold text-lg">
+                      <div className="flex items-center font-bold text-base">
                         <span className="mr-2">Read</span>
-                        <span className="text-2xl">&rarr;</span>
+                        <span className="text-xl">&rarr;</span>
                       </div>
                     </div>
                   </article>
