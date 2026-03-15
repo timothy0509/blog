@@ -35,10 +35,11 @@ export default function MobileNavWrapper() {
         ref={menuButtonRef}
         type="button"
         onClick={() => setMobileMenuOpen(true)}
-        className="md:hidden fixed top-4 right-4 z-30 border-4 border-black dark:border-white px-3 py-2 font-bold uppercase bg-yellow-400 hover:bg-yellow-300 press-button"
+        className="md:hidden fixed top-4 right-4 z-30 border-4 border-black dark:border-white px-4 py-3 font-bold uppercase bg-yellow-400 hover:bg-yellow-300 press-button cursor-pointer min-h-[44px] min-w-[44px] focus:outline-none focus-visible:ring-4 focus-visible:ring-yellow-400"
         aria-haspopup="dialog"
         aria-expanded={mobileMenuOpen}
         aria-controls="mobile-menu"
+        aria-label="Openmain menu"
       >
         MENU
       </button>

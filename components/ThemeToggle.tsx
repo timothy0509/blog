@@ -32,7 +32,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="border-4 border-[var(--fg)] p-2 bg-[var(--card)] text-[var(--fg)] hover:bg-yellow-400 hover:text-black transition-colors"
+      className="border-4 border-black dark:border-white p-2 bg-[var(--card)] text-[var(--fg)] hover:bg-yellow-400 hover:text-black transition-colors cursor-pointer min-h-[44px] min-w-[44px] focus:outline-none focus-visible:ring-4 focus-visible:ring-yellow-400"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? <MoonIcon /> : <SunIcon />}

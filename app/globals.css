@@ -7,6 +7,7 @@
   --shadow-brutal: 8px 8px 0px 0px rgba(0,0,0,1);
   --font-mono: var(--font-mono), "Courier New", Courier, monospace;
   --font-sans: Arial, Helvetica, sans-serif;
+  --font-display: var(--font-display), Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", sans-serif;
   --font-impact: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", sans-serif;
 }
 
@@ -97,6 +98,37 @@ body {
   border-radius: 0 !important;
 }
 
+*:focus-visible {
+  outline:3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 1rem;
+  background: var(--accent);
+  color: var(--border);
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 4px solid var(--border);
+  z-index: 10000;
+  transition: top 0.15s ease-out;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .graphic-corner {
   position: relative;
 }
@@ -164,11 +196,73 @@ body {
   pointer-events: none;
 }
 
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: var(--border); }
+  50% { border-color: var(--accent); }
+}
+
+@keyframes skeleton-pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+
+.brutal-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.brutal-marquee-content {
+  display: inline-flex;
+  animation: marquee 20s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brutal-marquee-content {
+    animation: none;
+  }
+}
+
+.skeleton-card {
+  background: var(--card);
+  border: 4px solid var(--border);
+  box-shadow: var(--shadow-brutal);
+}
+
+.skeleton-text {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--card) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 0;
+}
+
+.skeleton-text-dark {
+  background: linear-gradient(90deg, #333 25%, #222 50%, #333 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+[data-theme="dark"] .skeleton-text {
+  background: linear-gradient(90deg, #333 25%, #222 50%, #333 75%);
+  background-size: 200% 100%;
+}
+
 .brutal-card {
   background: var(--card);
   border: 4px solid var(--border);
   box-shadow: var(--shadow-brutal);
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.08s ease-out, color 0.08s ease-out;
+  cursor: pointer;
 }
 
 .brutal-card:hover {
@@ -186,12 +280,26 @@ body {
   box-shadow: 8px 8px 0 0 #facc15;
 }
 
+[data-theme="dark"] .brutal-card:active {
+  box-shadow: 4px 4px 0 0 #facc15;
+}
+
 [data-theme="dark"] .brutal-card:hover {
   box-shadow: 12px 12px 0 0 #facc15;
 }
 
-[data-theme="dark"] .brutal-card:active {
-  box-shadow: 4px 4px 0 0 #facc15;
+.brutal-card-no-pointer {
+  cursor: default;
+}
+
+.brutal-flood:active {
+  background: var(--border) !important;
+  color: var(--accent) !important;
+}
+
+[data-theme="dark"] .brutal-flood:active {
+  background: #fff !important;
+  color: #000 !important;
 }
 
 .featured-writeup {
@@ -295,17 +403,56 @@ body {
 }
 
 .prose-brutal pre {
-  background: #000;
-  color: #fff;
+  background: #0a0a0a;
+  color: #e5e5e5;
   border: 4px solid var(--border);
   padding: 1.25rem;
   margin: 1.5rem 0;
   overflow-x: auto;
+  position: relative;
+}
+
+.prose-brutal pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: #1a1a1a;
+  border-bottom: 4px solid var(--border);
+  display: flex;
+  align-items: center;
+}
+
+.prose-brutal pre::after {
+  content: '● ● ●';
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: #666;
+}
+
+.prose-brutal pre {
+  padding-top: 3rem;
+}
+
+.terminal-cursor::after {
+  content: '▋';
+  animation: blink 1s step-end infinite;
+  color: var(--accent);
 }
 
 [data-theme="dark"] .prose-brutal pre {
-  background: #1a1a1a;
+  background: #0a0a0a;
   border-color: #fff;
+}
+
+[data-theme="dark"] .prose-brutal pre::before {
+  background: #1a1a1a;
+  border-bottom-color: #fff;
 }
 
 .prose-brutal code {

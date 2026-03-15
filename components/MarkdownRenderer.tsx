@@ -2,6 +2,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import CodeBlock from './CodeBlock';
 
 interface MarkdownRendererProps {
   content: string;
@@ -27,10 +28,9 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
             const language = getLanguage(className);
 
             return (
-              <div className="code-block-wrapper">
-                {language && <span className="code-language-badge">{language}</span>}
+              <CodeBlock language={language}>
                 <pre {...props}>{children}</pre>
-              </div>
+              </CodeBlock>
             );
           },
         }}
