@@ -32,7 +32,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="border-4 border-black p-2 bg-[var(--card)] text-[var(--fg)] hover:bg-yellow-400 hover:text-black transition-colors"
+      className="border-4 border-[var(--fg)] p-2 bg-[var(--card)] text-[var(--fg)] hover:bg-yellow-400 hover:text-black transition-colors"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? <MoonIcon /> : <SunIcon />}
