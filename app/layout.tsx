@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={`antialiased min-h-screen flex flex-col selection:bg-black selection:text-white noise-overlay ${geistMono.variable} font-mono`}>
         <ThemeProvider>
           <header className="border-b-[6px] border-black dark:border-white p-4 md:p-6 flex justify-between items-center bg-brutal-header gap-4">
