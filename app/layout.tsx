@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`antialiased min-h-screen flex flex-col selection:bg-black selection:text-white noise-overlay ${geistMono.variable} font-mono`}>
         <ThemeProvider>
-          <header className="border-b-[6px] border-black dark:border-white p-4 md:p-6 flex justify-between items-center bg-brutal-header gap-4">
+          <header className="border-b-[6px] border-black p-4 md:p-6 flex justify-between items-center bg-brutal-header gap-4">
             <Link href="/" className="font-[family-name:var(--font-impact)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl uppercase tracking-tighter hover:bg-black hover:text-yellow-400 transition-none inline-block leading-none pb-1 border-4 border-transparent bg-yellow-400 px-2">
               TIMOTHY&apos;S CTF WRITEUPS
             </Link>
@@ -46,7 +46,7 @@ export default function RootLayout({
           <main className="flex-grow w-full p-4 md:p-8 md:pt-16">
             {children}
           </main>
-          <footer className="border-t-[6px] border-black dark:border-white p-4 md:p-8 bg-brutal-footer text-white uppercase text-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+          <footer className="border-t-[6px] border-black p-4 md:p-8 bg-brutal-footer text-white uppercase text-sm flex flex-col sm:flex-row justify-between items-center gap-4">
             <span className="font-bold tracking-widest">&copy; {new Date().getFullYear()} Timothy&apos;s CTF Writeups</span>
             <span className="bg-red-600 text-black px-2 py-1 font-bold transform -rotate-2 border-2 border-white shadow-[4px_4px_0_0_#fff]">NO RIGHTS RESERVED</span>
           </footer>
