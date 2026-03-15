@@ -41,28 +41,24 @@ export default function WriteupContent({ content, headings }: WriteupContentProp
       )}
 
       {/* Desktop TOC - sticky position below header */}
-      <div className="hidden lg:block">
-        <div className="sticky float-right -mr-80 top-20 w-72 z-30">
-          <div className="sticky top-20">
-            {/* Toggle button - always visible */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="w-full flex items-center justify-between border-4 border-black px-4 py-3 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] transition-all duration-100 mb-2"
-              aria-expanded={isOpen}
-              aria-label={isOpen ? 'Hide table of contents' : 'Show table of contents'}
-            >
-              <span>Table of Contents</span>
-              <span>{isOpen ? '−' : '+'}</span>
-            </button>
+      <div className="hidden lg:block sticky float-right -mr-80 top-20 w-72 z-30">
+        {/* Toggle button - always visible */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between border-4 border-black px-4 py-3 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] transition-all duration-100 mb-2"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? 'Hide table of contents' : 'Show table of contents'}
+        >
+          <span>Table of Contents</span>
+          <span>{isOpen ? '−' : '+'}</span>
+        </button>
 
-            {/* TOC Panel */}
-            {isOpen && (
-              <div className="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] max-h-[calc(100vh-12rem)] overflow-y-auto">
-                <TableOfContents headings={headings} />
-              </div>
-            )}
+        {/* TOC Panel */}
+        {isOpen && (
+          <div className="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] max-h-[calc(100vh-12rem)] overflow-y-auto">
+            <TableOfContents headings={headings} />
           </div>
-        </div>
+        )}
       </div>
 
       {/* Mobile TOC - slide from right */}
