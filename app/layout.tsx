@@ -24,8 +24,8 @@ const displayFont = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Timothy's CTF Writeups",
-  description: 'CTF writeups archive - capturing flags, one challenge at a time.',
+  title: 'SYJC CTF Writeups',
+  description: "CTF writeups from Sing Yin Jockey Club - capturing flags together.",
 };
 
 export default function RootLayout({
@@ -46,7 +46,7 @@ export default function RootLayout({
               className="font-display text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter hover:bg-black hover:text-[#DFE104] transition-colors duration-100 inline-block leading-none pb-1 border-4 border-transparent bg-[#DFE104] px-2 hover:border-black"
               aria-label="Go to homepage"
             >
-              <span className="inline-block">TIMOTHY&apos;S</span>
+              <span className="inline-block">SYJC</span>
               <span className="inline-block ml-2">CTF</span>
               <span className="inline-block ml-2">WRITEUPS</span>
             </Link>
@@ -78,7 +78,7 @@ export default function RootLayout({
           {children}
         </AnimatedMain>
         <AnimatedFooter>
-          <span className="font-bold tracking-widest text-xs sm:text-sm">&copy; {new Date().getFullYear()} Timothy&apos;s CTF Writeups</span>
+          <span className="font-bold tracking-widest text-xs sm:text-sm">&copy; {new Date().getFullYear()} SYJC CTF Writeups</span>
           <span className="bg-red-600 text-black px-3 py-1 font-bold transform -rotate-1 border-2 border-white shadow-[4px_4px_0_0_#222] text-xs sm:text-sm">
             NO RIGHTS RESERVED
           </span>

@@ -12,7 +12,8 @@ export interface WriteupInfo {
   path: string;
   createdAt: string;
   lastModified: string;
-  nickname: string;
+  writer?: string;
+  nickname?: string;
 }
 
 export interface WriteupDetail extends WriteupInfo {

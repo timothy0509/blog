@@ -6,13 +6,20 @@ import WriteupCard from '@/components/WriteupCard';
 import FeaturedWriteupCard from '@/components/FeaturedWriteupCard';
 import { WriteupInfo } from '@/lib/github';
 
+interface AuthorStats {
+  author: string;
+  count: number;
+  percentage: number;
+}
+
 interface HomeClientProps {
   writeups: WriteupInfo[];
   featuredWriteup: WriteupInfo | null;
   recentWriteups: WriteupInfo[];
+  authorStats: AuthorStats[];
 }
 
-export default function HomeClient({ featuredWriteup, recentWriteups }: Omit<HomeClientProps, 'writeups'>) {
+export default function HomeClient({ featuredWriteup, recentWriteups, authorStats }: Omit<HomeClientProps, 'writeups'>) {
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-12">
       <motion.section
@@ -51,7 +58,7 @@ export default function HomeClient({ featuredWriteup, recentWriteups }: Omit<Hom
           className="text-xl md:text-2xl font-bold max-w-2xl border-l-8 border-[#DFE104] pl-4 py-2 bg-white/50"
         >
           <p className="mb-2">Writeups from various CTF competitions.</p>
-          <p><span className="text-[#EF4444]">Taming vulnerabilities</span>, one flag at a time.</p>
+          <p><span className="text-[#EF4444]">Capturing flags</span>, together as a team.</p>
         </motion.div>
       </motion.section>
 
@@ -168,10 +175,13 @@ export default function HomeClient({ featuredWriteup, recentWriteups }: Omit<Hom
           className="text-lg font-bold space-y-4"
         >
           <p>
-            I&apos;m a CTF player and security enthusiast capturing flags and documenting vulnerabilities. This site serves as my personal writeup archive.
+            SYJC (Sing Yin Jockey Club) is a CTF team from Hong Kong. We capture flags and document our findings together.
+          </p>
+          <p className="font-medium">
+            Members: DXuwu, Timothy, member3, steve
           </p>
           <p>
-            All writeups are sourced from my GitHub repository:{' '}
+            All writeups are sourced from our GitHub repository:{' '}
             <Link
               href="https://github.com/timothy0509/writeups"
               target="_blank"
@@ -181,6 +191,24 @@ export default function HomeClient({ featuredWriteup, recentWriteups }: Omit<Hom
               timothy0509/writeups
             </Link>
           </p>
+          <div className="mt-6 pt-4 border-t-2 border-black/20">
+            <h3 className="font-display uppercase tracking-tight mb-4">Writeup Contributions</h3>
+            <div className="space-y-3">
+              {authorStats.map(({ author, count, percentage }) => (
+                <div key={author} className="flex items-center gap-3">
+                  <span className="font-bold w-24 text-sm">{author}</span>
+                  <div className="flex-1 h-6 bg-zinc-100 border-2 border-black overflow-hidden">
+                    <div
+                      className="h-full bg-[#DFE104] transition-all duration-300"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-mono w-16 text-right">{percentage}%</span>
+                  <span className="text-xs text-zinc-500">({count})</span>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="mt-6 pt-4 border-t-2 border-black/20">
             <motion.div
               initial="initial"
