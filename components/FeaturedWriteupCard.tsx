@@ -58,9 +58,16 @@ export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProp
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
-        className="text-sm font-medium text-zinc-600 mb-4"
+        className="flex flex-col gap-1 mb-4"
       >
-        {formatWriteupDate(writeup.createdAt)}
+        <span className="text-sm font-medium text-zinc-600">
+          {formatWriteupDate(writeup.createdAt)}
+        </span>
+        {writeup.nickname && (
+          <span className="text-xs text-zinc-500">
+            written by {writeup.nickname}
+          </span>
+        )}
       </motion.div>
 
       <motion.h2

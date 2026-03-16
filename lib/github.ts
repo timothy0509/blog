@@ -12,6 +12,7 @@ export interface WriteupInfo {
   path: string;
   createdAt: string;
   lastModified: string;
+  nickname: string;
 }
 
 export interface WriteupDetail extends WriteupInfo {
@@ -65,6 +66,7 @@ export async function getWriteupContent(filePath: string): Promise<WriteupDetail
     path: filePath,
     createdAt: writeupInfo?.createdAt || '',
     lastModified: writeupInfo?.lastModified || '',
+    nickname: writeupInfo?.nickname || '',
     content,
     frontmatter,
   };
