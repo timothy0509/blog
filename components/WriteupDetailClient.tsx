@@ -29,22 +29,22 @@ export default function WriteupDetailClient({
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
         className="mb-6"
       >
         <Link
           href="/writeups"
-          className="inline-block border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+          className="glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
         >
-          &larr; Back to Writeups
+          ← Back to Writeups
         </Link>
       </motion.div>
 
       <motion.header
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
-        className="border-b-[6px] border-black pb-8 mb-8"
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+        className="border-b border-slate-200/50 pb-8 mb-8"
       >
         <motion.div
           initial="initial"
@@ -62,21 +62,21 @@ export default function WriteupDetailClient({
         >
           <motion.span
             variants={{
-              initial: { opacity: 0, scale: 0.8, rotate: -10 },
-              animate: { opacity: 1, scale: 1, rotate: -1 },
+              initial: { opacity: 0, scale: 0.9},
+              animate: { opacity: 1, scale: 1 },
             }}
-            transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-            className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]"
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="font-semibold bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-4 py-2 text-base rounded-full shadow-md shadow-amber-500/20"
           >
             {event}
           </motion.span>
           <motion.span
             variants={{
-              initial: { opacity: 0, scale: 0.8, rotate: 10 },
-              animate: { opacity: 1, scale: 1, rotate: 1 },
+              initial: { opacity: 0, scale: 0.9 },
+              animate: { opacity: 1, scale: 1 },
             }}
-            transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-            className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-base transform rotate-1 shadow-[4px_4px_0_0_#000]`}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className={`font-semibold ${categoryColor.bg} ${categoryColor.text} px-4 py-2 text-base rounded-full`}
           >
             {category}
           </motion.span>
@@ -85,8 +85,8 @@ export default function WriteupDetailClient({
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-          className="text-display font-display uppercase leading-none mb-4 tracking-tight"
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+          className="text-display font-display leading-none mb-4 tracking-tight text-slate-800"
         >
           {title}
         </motion.h1>
@@ -107,41 +107,41 @@ export default function WriteupDetailClient({
         >
           <motion.div
             variants={{
-              initial: { opacity: 0, scale: 0.9 },
+              initial: { opacity: 0, scale: 0.95 },
               animate: { opacity: 1, scale: 1 },
             }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-black text-white px-4 py-2 font-bold text-base border-4 border-black transform -rotate-1"
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="inline-block bg-slate-800 text-white px-4 py-2 font-semibold text-base rounded-full"
           >
             {readingTime} min read
           </motion.div>
           <motion.div
             variants={{
-              initial: { opacity: 0, scale: 0.9 },
+              initial: { opacity: 0, scale: 0.95 },
               animate: { opacity: 1, scale: 1 },
             }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]"
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="inline-block bg-green-100 text-green-800 px-4 py-2 font-semibold text-base rounded-full"
           >
-            <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
+            <span className="text-green-600">⚑</span> FLAG DOCUMENTED
           </motion.div>
           <motion.div
             variants={{
-              initial: { opacity: 0, scale: 0.9 },
+              initial: { opacity: 0, scale: 0.95 },
               animate: { opacity: 1, scale: 1 },
             }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1"
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="inline-block bg-white/80 backdrop-blur-sm px-4 py-2 font-semibold text-base rounded-full border border-slate-200/50"
           >
             Created: {createdAt}
           </motion.div>
           <motion.div
             variants={{
-              initial: { opacity: 0, scale: 0.9 },
+              initial: { opacity: 0, scale: 0.95 },
               animate: { opacity: 1, scale: 1 },
             }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1"
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="inline-block bg-white/80 backdrop-blur-sm px-4 py-2 font-semibold text-base rounded-full border border-slate-200/50"
           >
             Updated: {lastModified}
           </motion.div>
@@ -151,7 +151,7 @@ export default function WriteupDetailClient({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
       >
         {children}
       </motion.div>
@@ -160,19 +160,19 @@ export default function WriteupDetailClient({
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-        className="mt-16 pt-8 border-t-[6px] border-black"
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        className="mt-16 pt-8 border-t border-slate-200/50"
       >
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <motion.div
             initial={{ scale: 1 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="bg-black text-white p-6 font-bold text-center text-lg shadow-[8px_8px_0_0_#DFE104] border-4 border-[#DFE104] max-w-lg transform -rotate-1"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 font-semibold text-center text-lg shadow-lg shadow-blue-500/30 rounded-2xl"
           >
             <motion.span
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2 }}
               className="text-2xl block mb-2"
             >
               ⚑
@@ -183,13 +183,13 @@ export default function WriteupDetailClient({
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
           >
             <Link 
               href="/writeups" 
-              className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
+              className="glass-btn px-6 py-4 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
-              Browse More Writeups&rarr;
+              Browse More Writeups→
             </Link>
           </motion.div>
         </div>

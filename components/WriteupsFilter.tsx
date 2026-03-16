@@ -46,31 +46,31 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-        className="mb-8 pb-6 border-b-[6px] border-black"
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+        className="mb-8 pb-6 border-b border-slate-200/50"
       >
         <div className="flex items-center justify-between gap-4">
           <div>
             <motion.h1
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-              className="text-display font-display uppercase leading-none mb-2 tracking-tight"
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              className="text-display font-displayleading-none mb-2 tracking-tight text-slate-800"
             >
               All Writeups
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-              className="text-lg font-bold"
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+              className="text-lg font-semibold text-slate-600"
             >
               <motion.span
                 key={filteredWriteups.length}
-                initial={{ scale: 1.2 }}
+                initial={{ scale: 1.1 }}
                 animate={{ scale: 1 }}
-                transition={{ duration: 0.1 }}
-                className="bg-black text-white px-2 py-0.5"
+                transition={{ duration: 0.2 }}
+                className="bg-slate-800 text-white px-2.5 py-0.5 rounded-full"
               >
                 {filteredWriteups.length}
               </motion.span>
@@ -78,11 +78,11 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               <AnimatePresence>
                 {(selectedCategory || selectedEvent) && (
                   <motion.span
-                    initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                    initial={{ opacity: 0, scale: 0.9, x: -10 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, x: 10 }}
-                    transition={{ duration: 0.1 }}
-                    className="ml-2 text-sm bg-[#DFE104] px-2 py-0.5 border-2 border-black"
+                    exit={{ opacity: 0, scale: 0.9, x: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="ml-2 text-sm bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full"
                   >
                     (filtered)
                   </motion.span>
@@ -93,9 +93,9 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           <motion.button
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+            className="md:hidden glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             aria-expanded={sidebarOpen}
             aria-controls="filter-sidebar"
           >
@@ -124,14 +124,14 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.15 }}
-                className="border-[6px] border-black p-8 bg-white shadow-[8px_8px_0_0_#000] text-center"
+                transition={{ duration: 0.25 }}
+                className="glass-card p-8 text-center"
               >
                 <motion.p
                   initial={{ scale: 1 }}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 0.3, times: [0, 0.5, 1] }}
-                  className="text-xl font-bold mb-4"
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 0.4, times: [0, 0.5, 1] }}
+                  className="text-xl font-semibold mb-4 text-slate-700"
                 >
                   No writeups match your filters.
                 </motion.p>
@@ -139,7 +139,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleClear}
-                  className="border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+                  className="glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
                   Clear Filters
                 </motion.button>
@@ -169,27 +169,27 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
                           animate: { opacity: 1, y: 0 },
                           exit: { opacity: 0, x: -20 },
                         }}
-                        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+                        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                       >
                         <Link href={`/writeups/${w.slug.join('/')}`} className="block group mb-6">
-                          <article className="border-[6px] border-black p-5 bg-white shadow-[8px_8px_0_0_#000] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0_0_#000] hover:rotate-[-0.5deg] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#000] transition-all duration-150">
+                          <article className="glass-card p-6group cursor-pointer">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-3">
-                                  <span className="font-bold bg-[#DFE104] border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide">
+                                  <span className="font-semibold bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-3 py-1 text-xs uppercase tracking-wide rounded-full">
                                     {w.event}
                                   </span>
-                                  <span className={`font-bold border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide ${color.bg} ${color.text}`}>
+                                  <span className={`font-semibold ${color.bg} ${color.text} px-3 py-1 text-xs uppercase tracking-wide rounded-full`}>
                                     {w.category}
                                   </span>
                                 </div>
-                                <h3 className="text-xl sm:text-2xl font-display uppercase group-hover:underline decoration-[3px] underline-offset-4 tracking-tight">
+                                <h3 className="text-xl sm:text-2xl font-display group-hover:text-blue-600 tracking-tight text-slate-800 transition-colors duration-200">
                                   {w.title}
                                 </h3>
                               </div>
-                              <div className="flex items-center font-bold text-base">
+                              <div className="flex items-center font-semibold text-base text-slate-600">
                                 <span className="mr-2">Read</span>
-                                <span className="text-xl">&rarr;</span>
+                                <span className="text-xl">→</span>
                               </div>
                             </div>
                           </article>

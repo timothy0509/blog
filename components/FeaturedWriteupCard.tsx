@@ -15,40 +15,39 @@ export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProp
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 30, rotate: 1 }}
-      animate={{ opacity: 1, y: 0, rotate: 1 }}
-      whileHover={{ x: -4, y: -4, rotate: -0.5 }}
-      whileTap={{ x: 2, y: 2 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className="border-[6px] border-black p-8 bg-white shadow-[12px_12px_0_0_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[4px_4px_0_0_#000] transition-shadow duration-150"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+      className="glass-card p-8"
     >
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
         className="flex flex-wrap gap-3 mb-4"
       >
         <motion.span
-          initial={{ opacity: 0, scale: 0.8, rotate: -3 }}
-          animate={{ opacity: 1, scale: 1, rotate: -1 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-          className="bg-[#DFE104] border-2 border-black px-4 py-1 font-bold text-lg transform -rotate-1 uppercase"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+          className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-4 py-1.5 font-semibold text-sm tracking-wide uppercase rounded-full"
         >
           Featured
         </motion.span>
         <motion.span
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
-          className="font-bold bg-yellow-400 border-2 border-black px-3 py-1 text-sm tracking-wide uppercase"
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
+          className="font-semibold bg-white/80 backdrop-blur-sm px-3 py-1.5 text-sm tracking-wide uppercase rounded-full border border-slate-200/50"
         >
           {writeup.event}
         </motion.span>
         <motion.span
-          initial={{ opacity: 0, scale: 0.8, rotate: 3 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.25 }}
-          className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-2 border-black px-3 py-1 text-sm tracking-wide uppercase`}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.25 }}
+          className={`font-semibold ${categoryColor.bg} ${categoryColor.text} px-3 py-1.5 text-sm tracking-wide uppercase rounded-full`}
         >
           {writeup.category}
         </motion.span>
@@ -57,14 +56,14 @@ export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProp
       <motion.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
         className="flex flex-col gap-1 mb-4"
       >
-        <span className="text-sm font-medium text-zinc-600">
+        <span className="text-sm font-medium text-slate-600">
           {formatWriteupDate(writeup.createdAt)}
         </span>
         {writeup.nickname && (
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-slate-500">
             written by {writeup.nickname}
           </span>
         )}
@@ -73,12 +72,12 @@ export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProp
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.35 }}
-        className="text-3xl md:text-4xl font-display uppercase leading-tight tracking-tight mb-6"
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.35 }}
+        className="text-3xl md:text-4xl font-display leading-tight tracking-tight mb-6 text-slate-800"
       >
         <Link
           href={`/writeups/${writeup.slug.join('/')}`}
-          className="hover:underline decoration-[4px] underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+          className="hover:text-blue-600 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
         >
           {writeup.title}
         </Link>
@@ -87,11 +86,11 @@ export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProp
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.4 }}
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.4 }}
       >
         <Link
           href={`/writeups/${writeup.slug.join('/')}`}
-          className="inline-block bg-black text-white py-3 px-6 font-bold uppercase text-lg hover:bg-[#DFE104] hover:text-black border-4 border-transparent hover:border-black transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+          className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 font-semibold text-base hover:from-blue-600 hover:to-blue-700 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full shadow-lg shadow-blue-500/20"
         >
           Read Writeup &rarr;
         </Link>

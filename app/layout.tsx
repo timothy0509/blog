@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased min-h-screen flex flex-col selection:bg-[#DFE104] selection:text-black noise-overlay ${geistMono.variable} ${spaceGrotesk.variable} ${displayFont.variable} font-sans`}>
+      <body className={`antialiased min-h-screen flex flex-col selection:bg-blue-500 selection:text-white ${geistMono.variable} ${spaceGrotesk.variable} ${displayFont.variable} font-sans`}>
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
@@ -43,7 +43,7 @@ export default function RootLayout({
           <AnimatedLogo>
             <Link 
               href="/" 
-              className="font-display text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter hover:bg-black hover:text-[#DFE104] transition-colors duration-100 inline-block leading-none pb-1 border-4 border-transparent bg-[#DFE104] px-2 hover:border-black"
+              className="font-display text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter hover:text-blue-600 transition-colors duration-200 inline-block leading-none pb-1 bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent"
               aria-label="Go to homepage"
             >
               <span className="inline-block">SYJC</span>
@@ -54,23 +54,23 @@ export default function RootLayout({
           <AnimatedNav>
             <Link 
               href="/" 
-              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] transition-all duration-100 bg-white"
+              className="glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200"
             >
-              INDEX
+              Index
             </Link>
             <Link 
               href="/writeups" 
-              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] transition-all duration-100 bg-white"
+              className="glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200"
             >
-              WRITEUPS
+              Writeups
             </Link>
             <a 
               href="https://github.com/timothy0509/writeups" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] transition-all duration-100 bg-white"
+              className="glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200"
             >
-              GITHUB
+              GitHub
             </a>
           </AnimatedNav>
         </AnimatedHeader>
@@ -78,8 +78,8 @@ export default function RootLayout({
           {children}
         </AnimatedMain>
         <AnimatedFooter>
-          <span className="font-bold tracking-widest text-xs sm:text-sm">&copy; {new Date().getFullYear()} SYJC CTF Writeups</span>
-          <span className="bg-red-600 text-black px-3 py-1 font-bold transform -rotate-1 border-2 border-white shadow-[4px_4px_0_0_#222] text-xs sm:text-sm">
+          <span className="font-semibold tracking-wide text-sm text-slate-600">&copy; {new Date().getFullYear()} SYJC CTF Writeups</span>
+          <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-1.5 font-semibold rounded-full text-sm shadow-lg shadow-blue-500/20">
             NO RIGHTS RESERVED
           </span>
         </AnimatedFooter>

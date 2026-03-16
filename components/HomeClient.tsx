@@ -25,28 +25,28 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.3 }}
         className="mb-4"
       >
         <motion.h1
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="text-hero font-display uppercase leading-none mb-6 tracking-tight"
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          className="text-hero font-display leading-none mb-6 tracking-tight"
         >
           <motion.span
-            initial={{ opacity: 0, y: 20, skewX: -5 }}
-            animate={{ opacity: 1, y: 0, skewX: 0 }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0 }}
-            className="inline-block"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0 }}
+            className="inline-block text-slate-800"
           >
             CTF
           </motion.span>
           <motion.span
-            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-            className="inline-block bg-black text-white px-3 py-1 transform rotate-1 ml-2 border-4 border-black"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+            className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-1rounded-lg ml-2 shadow-lg shadow-blue-500/20"
           >
             Writeups
           </motion.span>
@@ -54,11 +54,11 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-          className="text-xl md:text-2xl font-bold max-w-2xl border-l-8 border-[#DFE104] pl-4 py-2 bg-white/50"
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+          className="text-xl md:text-2xl font-semibold max-w-2xl pl-4 py-2 border-l-4 border-blue-500 bg-white/50 backdrop-blur-sm rounded-r-lg"
         >
-          <p className="mb-2">Writeups from various CTF competitions.</p>
-          <p><span className="text-[#EF4444]">Capturing flags</span>, together as a team.</p>
+          <p className="mb-2 text-slate-700">Writeups from various CTF competitions.</p>
+          <p><span className="text-blue-600 font-semibold">Capturing flags</span>, together as a team.</p>
         </motion.div>
       </motion.section>
 
@@ -67,16 +67,17 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="border-b-4 border-black pb-4 mb-6"
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            className="mb-6"
           >
-            <h2 className="text-h2 font-display uppercase tracking-tight">Featured</h2>
+            <h2 className="text-h2 font-display tracking-tight text-slate-800">Featured</h2>
+            <div className="h-1 w-16 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full mt-2"></div>
           </motion.div>
           <FeaturedWriteupCard writeup={featuredWriteup} />
         </motion.section>
@@ -86,27 +87,28 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="mb-8"
       >
-        <div className="flex justify-between items-end border-b-4 border-black pb-4 mb-8">
+        <div className="flex justify-between items-end mb-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
           >
-            <h2 className="text-h2 font-display uppercase tracking-tight">Recent Writeups</h2>
+            <h2 className="text-h2 font-display tracking-tight text-slate-800">Recent Writeups</h2>
+            <div className="h-1 w-16 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full mt-2"></div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
           >
             <Link 
               href="/writeups" 
-              className="border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+              className="glass-btn px-5 py-2.5 hover:bg-blue-500 hover:text-white uppercase tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
               View All&rarr;
             </Link>
@@ -132,10 +134,10 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
             <motion.div
               key={w.path}
               variants={{
-                initial: { opacity: 0, y: 30 },
+                initial: { opacity: 0, y: 20 },
                 animate: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             >
               <WriteupCard writeup={w} />
             </motion.div>
@@ -144,26 +146,26 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
       </motion.section>
 
       <motion.hr
-        initial={{ opacity: 0, scaleX: 0 }}
-        whileInView={{ opacity: 1, scaleX: 1 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-        className="brutal-section-divider origin-left"
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        className="section-divider origin-left"
       />
 
       <motion.section
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-        className="border-[6px] border-black p-8 bg-white shadow-[8px_8px_0_0_#000]"
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        className="glass-card p-8"
       >
         <motion.h2
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-          className="text-h1 font-display uppercase mb-6 border-b-4 border-black pb-4 tracking-tight"
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          className="text-h1 font-display mb-6 tracking-tight text-slate-800"
         >
           About
         </motion.h2>
@@ -171,45 +173,45 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
-          className="text-lg font-bold space-y-4"
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+          className="text-lg space-y-4"
         >
-          <p>
+          <p className="text-slate-700">
             SYJC (Sing Yin Jockey Club) is a CTF team from Hong Kong. We capture flags and document our findings together.
           </p>
-          <p className="font-medium">
+          <p className="font-medium text-slate-600">
             Members: DXuwu, Timothy, member3, steve
           </p>
-          <p>
+          <p className="text-slate-700">
             All writeups are sourced from our GitHub repository:{' '}
             <Link
               href="https://github.com/timothy0509/writeups"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black border-b-4 border-black hover:bg-[#DFE104] transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+              className="text-blue-600 hover:text-blue-700 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
             >
               timothy0509/writeups
             </Link>
           </p>
-          <div className="mt-6 pt-4 border-t-2 border-black/20">
-            <h3 className="font-display uppercase tracking-tight mb-4">Writeup Contributions</h3>
+          <div className="mt-6 pt-4 border-t border-slate-200/50">
+            <h3 className="font-display tracking-tight mb-4 text-slate-700">Writeup Contributions</h3>
             <div className="space-y-3">
               {authorStats.map(({ author, count, percentage }) => (
                 <div key={author} className="flex items-center gap-3">
-                  <span className="font-bold w-24 text-sm">{author}</span>
-                  <div className="flex-1 h-6 bg-zinc-100 border-2 border-black overflow-hidden">
+                  <span className="font-semibold w-24 text-sm text-slate-600">{author}</span>
+                  <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#DFE104] transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-300 rounded-full"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
-                  <span className="text-sm font-mono w-16 text-right">{percentage}%</span>
-                  <span className="text-xs text-zinc-500">({count})</span>
+                  <span className="text-sm font-mono w-16 text-right text-slate-600">{percentage}%</span>
+                  <span className="text-xs text-slate-500">({count})</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="mt-6 pt-4 border-t-2 border-black/20">
+          <div className="mt-6 pt-4 border-t border-slate-200/50">
             <motion.div
               initial="initial"
               whileInView="animate"
@@ -226,20 +228,20 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
               className="flex flex-wrap gap-3"
             >
               {[
-                { text: 'Web', className: 'bg-[#DFE104] border-2 border-black px-3 py-1 text-sm font-bold uppercase' },
-                { text: 'Crypto', className: 'bg-[#A855F7] text-white border-2 border-black px-3 py-1 text-sm font-bold uppercase' },
-                { text: 'Reverse', className: 'bg-[#F97316] border-2 border-black px-3 py-1 text-sm font-bold uppercase' },
-                { text: 'Pwn', className: 'bg-[#EF4444] text-white border-2 border-black px-3 py-1 text-sm font-bold uppercase' },
-                { text: 'Forensics', className: 'bg-[#22C55E] border-2 border-black px-3 py-1 text-sm font-bold uppercase' },
-                { text: 'Misc', className: 'bg-[#06B6D4] border-2 border-black px-3 py-1 text-sm font-bold uppercase' },
+                { text: 'Web', className: 'bg-blue-500/90 text-white px-3 py-1.5 text-sm font-semibold uppercase rounded-full' },
+                { text: 'Crypto', className: 'bg-purple-500/90 text-white px-3 py-1.5 text-sm font-semibold uppercase rounded-full' },
+                { text: 'Reverse', className: 'bg-orange-500/90 text-white px-3 py-1.5 text-sm font-semibold uppercase rounded-full' },
+                { text: 'Pwn', className: 'bg-red-500/90 text-white px-3 py-1.5 text-sm font-semibold uppercase rounded-full' },
+                { text: 'Forensics', className: 'bg-green-500/90 text-white px-3 py-1.5 text-sm font-semibold uppercase rounded-full' },
+                { text: 'Misc', className: 'bg-cyan-500/90 text-white px-3 py-1.5 text-sm font-semibold uppercase rounded-full' },
               ].map((tag) => (
                 <motion.span
                   key={tag.text}
                   variants={{
-                    initial: { opacity: 0, scale: 0.8, rotate: -5 },
-                    animate: { opacity: 1, scale: 1, rotate: 0 },
+                    initial: { opacity: 0, scale: 0.9 },
+                    animate: { opacity: 1, scale: 1 },
                   }}
-                  transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                   className={tag.className}
                 >
                   {tag.text}
