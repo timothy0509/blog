@@ -76,6 +76,11 @@ export default async function WriteupDetailPage({
           </h1>
 
           <div className="flex flex-wrap items-center gap-3 mb-4">
+            {detail.nickname && (
+              <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1 shadow-[4px_4px_0_0_#DFE104]">
+                written by {detail.nickname}
+              </div>
+            )}
             <div className="inline-block bg-black text-white px-4 py-2 font-bold text-base border-4 border-black transform -rotate-1">
               {readingTime} min read
             </div>

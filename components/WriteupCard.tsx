@@ -47,9 +47,16 @@ export default function WriteupCard({ writeup }: WriteupCardProps) {
         transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
         className="flex justify-between items-center mt-auto pt-4"
       >
-        <span className="text-sm font-medium text-zinc-600">
-          {formatWriteupDate(writeup.createdAt)}
-        </span>
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-medium text-zinc-600">
+            {formatWriteupDate(writeup.createdAt)}
+          </span>
+          {writeup.nickname && (
+            <span className="text-xs text-zinc-500">
+              written by {writeup.nickname}
+            </span>
+          )}
+        </div>
         <Link
           href={`/writeups/${writeup.slug.join('/')}`}
           className="bg-black text-white text-center py-2 px-4 font-bold uppercase text-sm hover:bg-[#DFE104] hover:text-black border-4 border-transparent hover:border-black transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
