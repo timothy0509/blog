@@ -14,6 +14,7 @@ interface WriteupsFilterProps {
 export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const categories = useMemo(
@@ -26,19 +27,36 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
     [writeups]
   );
 
+  const authors = useMemo(() => {
+    const authorSet = new Set<string>();
+    writeups.forEach((w) => {
+      if (w.nickname) {
+        authorSet.add(w.nickname);
+      }
+    });
+    return [...authorSet].sort();
+  }, [writeups]);
+
   const filteredWriteups = useMemo(
     () =>
       writeups.filter((w) => {
         if (selectedCategory && w.category !== selectedCategory) return false;
         if (selectedEvent && w.event !== selectedEvent) return false;
+        if (selectedAuthor) {
+          if (selectedAuthor === 'Unknown') {
+            return !w.nickname;
+          }
+          return w.nickname === selectedAuthor;
+        }
         return true;
       }),
-    [writeups, selectedCategory, selectedEvent]
+    [writeups, selectedCategory, selectedEvent, selectedAuthor]
   );
 
   const handleClear = () => {
     setSelectedCategory(null);
     setSelectedEvent(null);
+    setSelectedAuthor(null);
   };
 
   return (
@@ -76,7 +94,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               </motion.span>
               <span className="ml-2">writeup{filteredWriteups.length !== 1 ? 's' : ''}</span>
               <AnimatePresence>
-                {(selectedCategory || selectedEvent) && (
+                {(selectedCategory || selectedEvent || selectedAuthor) && (
                   <motion.span
                     initial={{ opacity: 0, scale: 0.8, x: -10 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -108,10 +126,13 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
         <FilterSidebar
           categories={categories}
           events={events}
+          authors={authors}
           selectedCategory={selectedCategory}
           selectedEvent={selectedEvent}
+          selectedAuthor={selectedAuthor}
           onCategoryChange={setSelectedCategory}
           onEventChange={setSelectedEvent}
+          onAuthorChange={setSelectedAuthor}
           onClear={handleClear}
           isOpen={sidebarOpen}
         />
