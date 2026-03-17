@@ -35,7 +35,7 @@ export default function FilterSidebar({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-      className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-72 shrink-0 md:sticky md:top-24 md:max-h-[calc(100vh-8rem)] md:overflow-y-auto pr-0 md:pr-6 pb-4`}
+      className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-72 shrink-0 md:sticky md:top-24 md:max-h-[calc(100vh-8rem)] md:overflow-y-auto px-2 md:pl-2 md:pr-8 pb-4`}
     >
       <motion.div
         initial={{ opacity: 0, y: 10 }}
