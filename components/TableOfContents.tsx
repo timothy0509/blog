@@ -107,20 +107,19 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
 
       {/* ToC Content */}
       <AnimatePresence initial={false}>
-        {(isExpanded || true) && (
-          <motion.div
-            id="toc-content"
-            initial={prefersReducedMotion ? {} : { opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={prefersReducedMotion ? {} : { opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className={`
-              ${isExpanded ? 'block' : 'hidden'} 
-              lg:block 
-              border-[6px] border-black bg-white shadow-[8px_8px_0_0_#000] p-4
-              lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto
-            `}
-          >
+        <motion.div
+          id="toc-content"
+          initial={prefersReducedMotion ? {} : { opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={prefersReducedMotion ? {} : { opacity: 0, height: 0 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+          className={`
+            ${isExpanded ? 'block' : 'hidden'}
+            lg:block
+            border-[6px] border-black bg-white shadow-[8px_8px_0_0_#000] p-4
+            lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto
+          `}
+        >
             <h2 className="font-display uppercase text-lg font-bold mb-4 border-b-4 border-black pb-2 tracking-tight">
               Contents
             </h2>
@@ -167,7 +166,6 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
               ))}
             </ul>
           </motion.div>
-        )}
       </AnimatePresence>
     </nav>
   );
