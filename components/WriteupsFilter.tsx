@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { WriteupInfo } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
 import FilterSidebar from './FilterSidebar';
+import SearchBar from './SearchBar';
 import Link from 'next/link';
 
 interface WriteupsFilterProps {
@@ -108,17 +109,20 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               </AnimatePresence>
             </motion.p>
           </div>
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-            aria-expanded={sidebarOpen}
-            aria-controls="filter-sidebar"
-          >
-            Filters {sidebarOpen ? '▲' : '▼'}
-          </motion.button>
+          <div className="flex items-center gap-4">
+            <SearchBar writeups={writeups} />
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+              aria-expanded={sidebarOpen}
+              aria-controls="filter-sidebar"
+            >
+              Filters {sidebarOpen ? '▲' : '▼'}
+            </motion.button>
+          </div>
         </div>
       </motion.header>
 

@@ -7,6 +7,7 @@ import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import LanguageBadge from './LanguageBadge';
+import { slugify } from '@/lib/headings';
 
 interface MarkdownRendererProps {
   content: string;
@@ -28,13 +29,6 @@ function extractTextFromChildren(children: unknown): string {
     return extractTextFromChildren(node.props?.children);
   }
   return '';
-}
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
 }
 
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
