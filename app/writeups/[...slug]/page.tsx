@@ -67,13 +67,13 @@ export default async function WriteupDetailPage({
         </div>
 
         <article className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12">
-          {/* Sidebar with ToC - Sticky on desktop */}
-          <aside className="lg:sticky lg:top-24 lg:self-start order-2 lg:order-1">
+          {/* Sidebar with ToC - Sticky on desktop, top on mobile */}
+          <aside className="lg:sticky lg:top-24 lg:self-start order-1">
             <TableOfContents headings={headings} />
           </aside>
 
           {/* Main content */}
-          <main className="order-1 lg:order-2 min-w-0">
+          <main className="order-2 min-w-0">
             <header className="border-b-[6px] border-black pb-8 mb-8">
               <div className="flex flex-wrap gap-3 mb-6">
                 <span className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]">
