@@ -15,6 +15,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const categories = useMemo(
@@ -48,15 +49,26 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           }
           return w.nickname === selectedAuthor;
         }
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          const matchesTitle = w.title.toLowerCase().includes(query);
+          const matchesEvent = w.event.toLowerCase().includes(query);
+          const matchesCategory = w.category.toLowerCase().includes(query);
+          const matchesAuthor = w.nickname?.toLowerCase().includes(query);
+          if (!matchesTitle && !matchesEvent && !matchesCategory && !matchesAuthor) {
+            return false;
+          }
+        }
         return true;
       }),
-    [writeups, selectedCategory, selectedEvent, selectedAuthor]
+    [writeups, selectedCategory, selectedEvent, selectedAuthor, searchQuery]
   );
 
   const handleClear = () => {
     setSelectedCategory(null);
     setSelectedEvent(null);
     setSelectedAuthor(null);
+    setSearchQuery('');
   };
 
   return (
@@ -94,7 +106,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               </motion.span>
               <span className="ml-2">writeup{filteredWriteups.length !== 1 ? 's' : ''}</span>
               <AnimatePresence>
-                {(selectedCategory || selectedEvent || selectedAuthor) && (
+                {(selectedCategory || selectedEvent || selectedAuthor || searchQuery) && (
                   <motion.span
                     initial={{ opacity: 0, scale: 0.8, x: -10 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -130,9 +142,11 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           selectedCategory={selectedCategory}
           selectedEvent={selectedEvent}
           selectedAuthor={selectedAuthor}
+          searchQuery={searchQuery}
           onCategoryChange={setSelectedCategory}
           onEventChange={setSelectedEvent}
           onAuthorChange={setSelectedAuthor}
+          onSearchChange={setSearchQuery}
           onClear={handleClear}
           isOpen={sidebarOpen}
         />
