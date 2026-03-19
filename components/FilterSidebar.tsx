@@ -55,7 +55,7 @@ export default function FilterSidebar({
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search writeups..."
             aria-label="Search writeups by title, event, category, or author"
-            className="w-full border-4 border-black px-4 py-3 font-mono text-sm bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] placeholder:text-gray-400"
+            className="w-full border-4 border-black px-4 py-3 font-mono text-sm bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] placeholder:text-gray-400 min-h-[44px]"
           />
           {searchQuery && (
             <button
@@ -105,7 +105,7 @@ export default function FilterSidebar({
                 aria-pressed={isSelected}
                 whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
                 whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 ${color.bg} ${color.text} ${
+                className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${color.bg} ${color.text} ${
                   isSelected 
                     ? 'shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]' 
                     : 'hover:shadow-[4px_4px_0_0_#000]'
@@ -153,7 +153,7 @@ export default function FilterSidebar({
                 aria-pressed={isSelected}
                 whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
                 whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 ${
+                className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${
                   isSelected 
                     ? 'bg-[#DFE104] text-black shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]' 
                     : 'bg-white hover:bg-[#DFE104] hover:shadow-[4px_4px_0_0_#000]'
@@ -201,7 +201,7 @@ export default function FilterSidebar({
                 aria-pressed={isSelected}
                 whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
                 whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 ${
+                className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${
                   isSelected 
                     ? 'bg-blue-500 text-white shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]' 
                     : 'bg-white hover:bg-blue-500 hover:text-white hover:shadow-[4px_4px_0_0_#000]'
@@ -221,7 +221,7 @@ export default function FilterSidebar({
             aria-pressed={selectedAuthor === 'Unknown'}
             whileHover={selectedAuthor !== 'Unknown' ? { x: -2, y: -2 } : undefined}
             whileTap={{ scale: 0.95 }}
-            className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 border-dashed ${
+            className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] border-dashed ${
               selectedAuthor === 'Unknown'
                 ? 'bg-gray-500 text-white shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]' 
                 : 'bg-white hover:bg-gray-500 hover:text-white hover:shadow-[4px_4px_0_0_#000]'
@@ -242,7 +242,7 @@ export default function FilterSidebar({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onClear}
-            className="border-4 border-black px-4 py-2 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000]"
+            className="border-4 border-black px-4 py-3 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] min-h-[44px]"
           >
             Clear Filters
           </motion.button>

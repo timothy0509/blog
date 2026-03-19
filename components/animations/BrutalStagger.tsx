@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface BrutalStaggerProps {
@@ -16,6 +16,12 @@ export default function BrutalStagger({
   delay = 0,
   staggerDelay = 0.05 
 }: BrutalStaggerProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+  
   return (
     <motion.div
       initial="initial"

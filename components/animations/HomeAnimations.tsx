@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface HeroSectionProps {
@@ -8,11 +8,13 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ children }: HeroSectionProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
       className="mb-4"
     >
       {children}
@@ -25,11 +27,13 @@ interface HeroTitleProps {
 }
 
 export function HeroTitle({ children }: HeroTitleProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.h1
-      initial={{ opacity: 0, x: -30 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -30 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
       className="text-hero font-display uppercase leading-none mb-6 tracking-tight"
     >
       {children}
@@ -38,11 +42,13 @@ export function HeroTitle({ children }: HeroTitleProps) {
 }
 
 export function HeroTagline({ children }: HeroSectionProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
       className="text-xl md:text-2xl font-bold max-w-2xl border-l-8 border-[#DFE104] pl-4 py-2 bg-white/50"
     >
       {children}
@@ -57,6 +63,12 @@ interface AnimatedWordProps {
 }
 
 export function AnimatedWord({ children, delay = 0, isHighlight = false }: AnimatedWordProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
+  if (prefersReducedMotion) {
+    return <span className={isHighlight ? "inline-block bg-black text-white px-3 py-1 transform rotate-1 ml-2 border-4 border-black" : "inline-block"}>{children}</span>;
+  }
+  
   return (
     <motion.span
       initial={{ opacity: 0, y: 20, skewX: isHighlight ? 0 : -5 }}
@@ -76,12 +88,14 @@ interface SectionRevealProps {
 }
 
 export function SectionReveal({ children, className = '', delay = 0 }: SectionRevealProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.section
-      initial={{ opacity: 0, y: 40 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1], delay }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1], delay }}
       className={className}
     >
       {children}
@@ -94,12 +108,14 @@ interface SectionHeaderProps {
 }
 
 export function SectionHeader({ children }: SectionHeaderProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.15, ease: [0.4, 0, 0.2, 1] }}
       className="border-b-4 border-black pb-4 mb-6"
     >
       {children}
@@ -114,6 +130,12 @@ interface TagProps {
 }
 
 export function AnimatedTag({ children, delay = 0, className = '' }: TagProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
+  if (prefersReducedMotion) {
+    return <span className={className}>{children}</span>;
+  }
+  
   return (
     <motion.span
       initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
@@ -131,6 +153,12 @@ interface TagsContainerProps {
 }
 
 export function TagsContainer({ children }: TagsContainerProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
+  if (prefersReducedMotion) {
+    return <div className="flex flex-wrap gap-3">{children}</div>;
+  }
+  
   return (
     <motion.div
       initial="initial"
