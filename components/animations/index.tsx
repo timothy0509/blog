@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface BrutalCardProps {
@@ -9,12 +9,14 @@ interface BrutalCardProps {
 }
 
 export function BrutalCard({ children, className = '' }: BrutalCardProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.article
-      initial={{ opacity: 0, y: 30 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ x: -4, y: -4, rotate: -0.5 }}
-      whileTap={{ x: 2, y: 2, rotate: 0 }}
+      whileHover={prefersReducedMotion ? {} : { x: -4, y: -4, rotate: -0.5 }}
+      whileTap={prefersReducedMotion ? {} : { x: 2, y: 2, rotate: 0 }}
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
       className={className}
     >
@@ -36,12 +38,14 @@ export function BrutalButton({
   onClick,
   type = 'button'
 }: BrutalButtonProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.button
       type={type}
       onClick={onClick}
-      whileHover={{ scale: 1.02, x: 1, y: -1 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={prefersReducedMotion ? {} : { scale: 1.02, x: 1, y: -1 }}
+      whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
       transition={{ duration: 0.08 }}
       className={className}
     >
@@ -56,7 +60,12 @@ interface GlitchTextProps {
 }
 
 export function GlitchText({ text, className = '' }: GlitchTextProps) {
+  const prefersReducedMotion = useReducedMotion();
   const words = text.split(' ');
+  
+  if (prefersReducedMotion) {
+    return <span className={className}>{text}</span>;
+  }
   
   return (
     <motion.span className={className}>
@@ -83,10 +92,12 @@ interface PopInProps {
 }
 
 export function PopIn({ children, className = '', delay = 0 }: PopInProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, rotate: -3 }}
-      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8, rotate: -3 }}
+      animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, rotate: 0 }}
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay }}
       className={className}
     >
@@ -108,7 +119,7 @@ export function SlideIn({
   direction = 'up',
   delay = 0 
 }: SlideInProps) {
-  const directionMap = {
+  const prefersReducedMotion = useReducedMotion();const directionMap = {
     left: { initial: { x: -40 }, animate: { x: 0 } },
     right: { initial: { x: 40 }, animate: { x: 0 } },
     up: { initial: { y: 30 }, animate: { y: 0 } },
@@ -117,8 +128,8 @@ export function SlideIn({
 
   return (
     <motion.div
-      initial={{ opacity: 0, ...directionMap[direction].initial }}
-      animate={{ opacity: 1, ...directionMap[direction].animate }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, ...directionMap[direction].initial }}
+      animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, ...directionMap[direction].animate }}
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay }}
       className={className}
     >

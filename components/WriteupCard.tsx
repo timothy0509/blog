@@ -36,7 +36,7 @@ export default function WriteupCard({ writeup }: WriteupCardProps) {
       >
         <Link 
           href={`/writeups/${writeup.slug.join('/')}`} 
-          className="hover:underline decoration-[3px] underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+          className="hover:underline decoration-[3px] underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 py-2 inline-block min-h-[44px] flex items-center"
         >
           {writeup.title}
         </Link>
@@ -59,7 +59,7 @@ export default function WriteupCard({ writeup }: WriteupCardProps) {
         </div>
         <Link
           href={`/writeups/${writeup.slug.join('/')}`}
-          className="bg-black text-white text-center py-2 px-4 font-bold uppercase text-sm hover:bg-[#DFE104] hover:text-black border-4 border-transparent hover:border-black transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+          className="bg-black text-white text-center py-3 px-4 font-bold uppercase text-sm hover:bg-[#DFE104] hover:text-black border-4 border-transparent hover:border-black transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] flex items-center justify-center"
         >
           Read&rarr;
         </Link>

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface BrutalTransitionProps {
@@ -9,12 +9,14 @@ interface BrutalTransitionProps {
 }
 
 export default function BrutalTransition({ children, className = '' }: BrutalTransitionProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.15, ease: [0.4, 0, 0.2, 1] }}
       className={className}
     >
       {children}
@@ -23,5 +25,5 @@ export default function BrutalTransition({ children, className = '' }: BrutalTra
 }
 
 export function PageTransitionWrapper({ children }: { children: ReactNode }) {
-  return <AnimatePresence mode="wait">{children}</AnimatePresence>;
+  return <>{children}</>;
 }

@@ -73,6 +73,10 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {filteredWriteups.length} writeup{filteredWriteups.length !== 1 ? 's' : ''} found
+        {(selectedCategory || selectedEvent || selectedAuthor || searchQuery) && ' (filtered)'}.
+      </div>
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -39,6 +39,13 @@
   --transition-instant: 100ms;
   --transition-fast: 150ms;
   --transition-normal: 250ms;
+  --border-width-sm: 2px;
+  --border-width-md: 4px;
+  --border-width-lg: 6px;
+  --shadow-offset-sm: 4px;
+  --shadow-offset-md: 6px;
+  --shadow-offset-lg: 8px;
+  --shadow-offset-xl: 12px;
 }
 
 @keyframes marquee {

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
+import { motion, useReducedMotion, useInView } from 'framer-motion';
 import { useRef, ReactNode } from 'react';
 
 interface BrutalRevealProps {
@@ -12,6 +12,11 @@ interface BrutalRevealProps {
 export default function BrutalReveal({ children, className = '', delay = 0 }: BrutalRevealProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div ref={ref} className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
