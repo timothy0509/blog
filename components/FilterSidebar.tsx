@@ -10,9 +10,11 @@ interface FilterSidebarProps {
   selectedCategory: string | null;
   selectedEvent: string | null;
   selectedAuthor: string | null;
+  searchQuery: string;
   onCategoryChange: (category: string | null) => void;
   onEventChange: (event: string | null) => void;
   onAuthorChange: (author: string | null) => void;
+  onSearchChange: (query: string) => void;
   onClear: () => void;
   isOpen: boolean;
 }
@@ -24,9 +26,11 @@ export default function FilterSidebar({
   selectedCategory,
   selectedEvent,
   selectedAuthor,
+  searchQuery,
   onCategoryChange,
   onEventChange,
   onAuthorChange,
+  onSearchChange,
   onClear,
   isOpen,
 }: FilterSidebarProps) {
@@ -37,6 +41,34 @@ export default function FilterSidebar({
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
       className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-72 shrink-0 md:sticky md:top-24 md:max-h-[calc(100vh-8rem)] md:overflow-y-auto px-2 md:pl-2 md:pr-8 pb-4`}
     >
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+        className="mb-8"
+      >
+        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">Search</h3>
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search writeups..."
+            aria-label="Search writeups by title, event, category, or author"
+            className="w-full border-4 border-black px-4 py-3 font-mono text-sm bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] placeholder:text-gray-400"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchChange('')}
+              aria-label="Clear search"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors font-bold"
+            >
+              ×
+            </button>
+          )}
+        </div>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -201,7 +233,7 @@ export default function FilterSidebar({
       </motion.div>
 
       <AnimatePresence>
-        {(selectedCategory || selectedEvent || selectedAuthor) && (
+        {(selectedCategory || selectedEvent || selectedAuthor || searchQuery) && (
           <motion.button
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

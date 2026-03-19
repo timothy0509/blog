@@ -6,6 +6,7 @@ import Link from 'next/link';
 import WriteupContent from '@/components/WriteupContent';
 import ReadingProgress from '@/components/ReadingProgress';
 import ShareButtons from '@/components/ShareButtons';
+import RelatedWriteups from '@/components/RelatedWriteups';
 
 function calculateReadingTime(text: string): number {
   const wordsPerMinute = 200;
@@ -99,6 +100,8 @@ export default async function WriteupDetailPage({
         </header>
 
         <WriteupContent content={detail.content} />
+
+        <RelatedWriteups currentWriteup={detail} allWriteups={writeups} />
 
         <div className="mt-16 pt-8 border-t-[6px] border-black">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
