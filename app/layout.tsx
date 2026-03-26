@@ -44,10 +44,24 @@ export default function RootLayout({
           {children}
         </AnimatedMain>
         <AnimatedFooter>
-          <span className="font-bold tracking-widest text-xs sm:text-sm">&copy; {new Date().getFullYear()} SYJC CTF Writeups</span>
-          <span className="bg-red-600 text-black px-3 py-1 font-bold transform -rotate-1 border-2 border-white shadow-[4px_4px_0_0_#222] text-xs sm:text-sm">
-            NO RIGHTS RESERVED
-          </span>
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                <span className="font-bold tracking-widest text-xs sm:text-sm text-white/90">
+                  &copy; {new Date().getFullYear()} SYJC CTF
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="bg-[#DFE104] text-black px-3 py-1 font-bold text-xs border-2 border-white/30 shadow-[3px_3px_0_0_rgba(255,255,255,0.2)]">
+                    NO RIGHTS RESERVED
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-white/60 text-xs">flags captured</span>
+                <span className="text-2xl">⚔️</span>
+              </div>
+            </div>
+          </div>
         </AnimatedFooter>
       </body>
     </html>

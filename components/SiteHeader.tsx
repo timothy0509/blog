@@ -1,13 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import MobileNav, { MobileNavToggle } from './MobileNav';
 
 export default function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const headerVariants = {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : -30 },
@@ -31,22 +40,25 @@ export default function SiteHeader() {
         initial="hidden"
         animate="visible"
         transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
-        className="border-b-[6px] border-black p-4 md:p-6 flex justify-between items-center bg-brutal-header"
+        className={`border-b-[6px] border-black p-4 md:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 sticky-header transition-all duration-200 ${
+          isScrolled ? 'shadow-[0_4px_0_0_#000]' : ''
+        }`}
       >
         <motion.div
           variants={logoVariants}
           initial="hidden"
           animate="visible"
           transition={{ duration: prefersReducedMotion ? 0 : 0.15, ease: [0.4, 0, 0.2, 1] }}
+          className="flex items-center"
         >
           <Link
             href="/"
-            className="font-display text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter hover:bg-black hover:text-[#DFE104] transition-colors duration-100 inline-block leading-none pb-1 border-4 border-transparent bg-[#DFE104] px-2 hover:border-black"
+            className="font-display text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter hover:bg-black hover:text-[#DFE104] transition-colors duration-100 inline-block leading-none pb-1 border-4 border-transparent bg-[#DFE104] px-2 hover:border-black group"
             aria-label="Go to homepage"
           >
-            <span className="inline-block">SYJC</span>
-            <span className="inline-block ml-2">CTF</span>
-            <span className="inline-block ml-2">WRITEUPS</span>
+            <span className="inline-block group-hover:-rotate-1 transition-transform duration-150">SYJC</span>
+            <span className="inline-block ml-2 text-black/50 group-hover:text-[#DFE104]/70">CTF</span>
+            <span className="inline-block ml-2 group-hover:rotate-1 transition-transform duration-150">WRITEUPS</span>
           </Link>
         </motion.div>
 
@@ -66,13 +78,13 @@ export default function SiteHeader() {
           >
             <Link
               href="/"
-              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] transition-all duration-100 bg-white min-h-[44px] flex items-center"
+              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 bg-white min-h-[44px] flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
             >
               INDEX
             </Link>
             <Link
               href="/writeups"
-              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] transition-all duration-100 bg-white min-h-[44px] flex items-center"
+              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 bg-white min-h-[44px] flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
             >
               WRITEUPS
             </Link>
@@ -80,7 +92,7 @@ export default function SiteHeader() {
               href="https://github.com/timothy0509/writeups"
               target="_blank"
               rel="noopener noreferrer"
-              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] transition-all duration-100 bg-white min-h-[44px] flex items-center"
+              className="border-4 border-black px-4 py-2 hover:bg-black hover:text-white uppercase shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 bg-white min-h-[44px] flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
             >
               GITHUB
             </a>

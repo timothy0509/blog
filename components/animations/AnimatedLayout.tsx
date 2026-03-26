@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 
-export function AnimatedHeader({ children }: { children: ReactNode }) {
+export function AnimatedHeader({ children, className = '' }: { children: ReactNode; className?: string }) {
   const prefersReducedMotion = useReducedMotion();
   
   return (
@@ -11,7 +11,7 @@ export function AnimatedHeader({ children }: { children: ReactNode }) {
       initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className="border-b-[6px] border-black p-4 md:p-6 flex flex-col sm:flex-row justify-between sm:items-center bg-brutal-header gap-4"
+      className={`border-b-[6px] border-black p-4 md:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 ${className}`}
     >
       {children}
     </motion.header>
@@ -56,7 +56,7 @@ export function AnimatedFooter({ children }: { children: ReactNode }) {
       initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className="border-t-[6px] border-black p-4 md:p-6 bg-brutal-footer text-white uppercase text-sm flex flex-col sm:flex-row justify-between items-center gap-4"
+      className="border-t-[6px] border-black p-6 md:p-8 bg-brutal-footer text-white text-sm"
     >
       {children}
     </motion.footer>

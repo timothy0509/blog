@@ -56,14 +56,18 @@ export default async function WriteupDetailPage({
         <div className="mb-6">
           <Link
             href="/writeups"
-            className="inline-block border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
           >
-            &larr; Back to Writeups
+            <span className="text-lg">&larr;</span>
+            <span>All Writeups</span>
           </Link>
         </div>
 
-        <header className="border-b-[6px] border-black pb-8 mb-8">
-          <div className="flex flex-wrap gap-3 mb-6">
+        <header className="border-b-[6px] border-black pb-8 mb-8 relative overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#DFE104]/10 transform rotate-12 pointer-events-none" aria-hidden="true" />
+          <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-black/5 transform -rotate-6 pointer-events-none" aria-hidden="true" />
+          
+          <div className="flex flex-wrap gap-3 mb-6 relative">
             <span className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]">
               {detail.event}
             </span>
@@ -72,11 +76,11 @@ export default async function WriteupDetailPage({
             </span>
           </div>
 
-          <h1 className="text-display font-display uppercase leading-none mb-4 tracking-tight">
+          <h1 className="text-display font-display uppercase leading-none mb-6 tracking-tight relative">
             {detail.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-3 mb-4">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             {detail.nickname && (
               <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1 shadow-[4px_4px_0_0_#DFE104]">
                 written by {detail.nickname}
@@ -86,12 +90,15 @@ export default async function WriteupDetailPage({
               {readingTime} min read
             </div>
             <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]">
-              <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
+              <span className="text-[#E63946] text-lg">⚑</span> FLAG DOCUMENTED
             </div>
-            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1">
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-3 mb-6 text-sm">
+            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-medium transform -rotate-1">
               Created: {formatWriteupDate(detail.createdAt)}
             </div>
-            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1">
+            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-medium transform rotate-1">
               Updated: {formatWriteupDate(detail.lastModified)}
             </div>
           </div>
@@ -103,17 +110,20 @@ export default async function WriteupDetailPage({
 
         <RelatedWriteups currentWriteup={detail} allWriteups={writeups} />
 
-        <div className="mt-16 pt-8 border-t-[6px] border-black">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <div className="mt-16 pt-8 border-t-[6px] border-black relative overflow-hidden">
+          <div className="absolute top-8 right-8 w-24 h-24 bg-[#DFE104]/10 transform rotate-12 pointer-events-none" aria-hidden="true" />
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
             <div className="bg-black text-white p-6 font-bold text-center text-lg shadow-[8px_8px_0_0_#DFE104] border-4 border-[#DFE104] max-w-lg transform -rotate-1">
               <span className="text-2xl block mb-2">⚑</span>
               FLAG CAPTURED
             </div>
-            <Link 
-              href="/writeups" 
-              className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
+            <Link
+              href="/writeups"
+              className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1 inline-flex items-center gap-2"
             >
-              Browse More Writeups&rarr;
+              <span>Browse More Writeups</span>
+              <span className="text-lg">&rarr;</span>
             </Link>
           </div>
         </div>
