@@ -5,6 +5,7 @@ import 'katex/dist/katex.min.css';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import { AnimatedFooter, AnimatedMain } from '@/components/animations/AnimatedLayout';
+import { config } from '@/lib/config';
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
@@ -24,8 +25,28 @@ const displayFont = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'SYJC CTF Writeups',
-  description: "CTF writeups from Sing Yin Jockey Club - capturing flags together.",
+  title: {
+    template: '%s | SYJC CTF Writeups',
+    default: 'SYJC CTF Writeups',
+  },
+  description: 'CTF writeups from Sing Yin Jockey Club - capturing flags together.',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: config.site.url,
+    siteName: config.site.name,
+    title: 'SYJC CTF Writeups',
+    description: 'CTF writeups from Sing Yin Jockey Club - capturing flags together.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SYJC CTF Writeups',
+    description: 'CTF writeups from Sing Yin Jockey Club - capturing flags together.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
