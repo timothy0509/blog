@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getWriteups, getWriteupContent } from '@/lib/github';
+import type { Metadata } from 'next';
+import { getWriteups, getWriteupBySlug } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
 import { formatWriteupDate } from '@/lib/date';
+import { config } from '@/lib/config';
 import Link from 'next/link';
 import WriteupContent from '@/components/WriteupContent';
 import ReadingProgress from '@/components/ReadingProgress';
@@ -23,31 +25,59 @@ export async function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const decodedSlug = slug.map((s) => decodeURIComponent(s));
+  const detail = await getWriteupBySlug(decodedSlug);
+
+  if (!detail) {
+    return {
+      title: 'Writeup Not Found',
+    };
+  }
+
+  return {
+    title: detail.title,
+    description: `${detail.category} writeup from ${detail.event}${detail.nickname ? ` by ${detail.nickname}` : ''}`,
+    openGraph: {
+      title: detail.title,
+      description: `${detail.category} - ${detail.event}`,
+      type: 'article',
+      publishedTime: detail.createdAt,
+      modifiedTime: detail.lastModified,
+      authors: detail.nickname ? [detail.nickname] : undefined,
+      url: `${config.site.url}/writeups/${detail.slug.join('/')}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: detail.title,
+      description: `${detail.category} - ${detail.event}`,
+    },
+  };
+}
+
 export default async function WriteupDetailPage({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
   const { slug } = await params;
-  const decodedSlug = slug.map(s => decodeURIComponent(s));
+  const decodedSlug = slug.map((s) => decodeURIComponent(s));
 
-  const writeups = await getWriteups();
-  const targetWriteup = writeups.find(w =>
-    w.slug.map(s => s.toLowerCase()).join('/') === decodedSlug.map(s => s.toLowerCase()).join('/')
-  );
+  const detail = await getWriteupBySlug(decodedSlug);
 
-  if (!targetWriteup) {
-    notFound();
-  }
-
-  const detail = await getWriteupContent(targetWriteup.path);
   if (!detail) {
     notFound();
   }
 
+  const writeups = await getWriteups();
   const readingTime = calculateReadingTime(detail.content);
   const categoryColor = getCategoryColor(detail.category);
-  const pageUrl = `https://blog.hkjc.uk/writeups/${detail.slug.map(s => encodeURIComponent(s)).join('/')}`;
+  const pageUrl = `${config.site.url}/writeups/${detail.slug.map((s) => encodeURIComponent(s)).join('/')}`;
 
   return (
     <>
@@ -109,8 +139,8 @@ export default async function WriteupDetailPage({
               <span className="text-2xl block mb-2">⚑</span>
               FLAG CAPTURED
             </div>
-            <Link 
-              href="/writeups" 
+            <Link
+              href="/writeups"
               className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
             >
               Browse More Writeups&rarr;
