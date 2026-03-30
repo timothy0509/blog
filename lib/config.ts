@@ -5,7 +5,7 @@ export const config = {
     branch: process.env.GITHUB_REPO_BRANCH ?? 'main',
   },
   site: {
-    url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://blog.hkjc.uk',
     name: process.env.NEXT_PUBLIC_SITE_NAME ?? 'SYJC CTF Writeups',
   },
 } as const;
