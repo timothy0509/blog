@@ -4,19 +4,30 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { WriteupInfo } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
+import { formatWriteupDate } from '@/lib/date';
 import FilterSidebar from './FilterSidebar';
 import Link from 'next/link';
+
+type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'event';
+
+interface DateRange {
+  field: 'createdAt' | 'lastModified';
+  start: string | null;
+  end: string | null;
+}
 
 interface WriteupsFilterProps {
   writeups: WriteupInfo[];
 }
 
 export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
-  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [selectedEvents, setSelectedEvents] = useState<Set<string>>(new Set());
+  const [selectedAuthors, setSelectedAuthors] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sortOption, setSortOption] = useState<SortOption>('newest');
+  const [dateRange, setDateRange] = useState<DateRange>({ field: 'createdAt', start: null, end: null });
 
   const categories = useMemo(
     () => [...new Set(writeups.map((w) => w.category))].sort(),
@@ -38,44 +49,104 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
     return [...authorSet].sort();
   }, [writeups]);
 
-  const filteredWriteups = useMemo(
-    () =>
-      writeups.filter((w) => {
-        if (selectedCategory && w.category !== selectedCategory) return false;
-        if (selectedEvent && w.event !== selectedEvent) return false;
-        if (selectedAuthor) {
-          if (selectedAuthor === 'Unknown') {
-            return !w.nickname;
-          }
-          return w.nickname === selectedAuthor;
+  const toggleCategory = (cat: string) => {
+    setSelectedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) {
+        next.delete(cat);
+      } else {
+        next.add(cat);
+      }
+      return next;
+    });
+  };
+
+  const toggleEvent = (event: string) => {
+    setSelectedEvents((prev) => {
+      const next = new Set(prev);
+      if (next.has(event)) {
+        next.delete(event);
+      } else {
+        next.add(event);
+      }
+      return next;
+    });
+  };
+
+  const toggleAuthor = (author: string) => {
+    setSelectedAuthors((prev) => {
+      const next = new Set(prev);
+      if (next.has(author)) {
+        next.delete(author);
+      } else {
+        next.add(author);
+      }
+      return next;
+    });
+  };
+
+  const filteredWriteups = useMemo(() => {
+    const result = writeups.filter((w) => {
+      if (selectedCategories.size > 0 && !selectedCategories.has(w.category)) return false;
+      if (selectedEvents.size > 0 && !selectedEvents.has(w.event)) return false;
+      if (selectedAuthors.size > 0) {
+        const authorKey = w.nickname ?? 'Unknown';
+        if (!selectedAuthors.has(authorKey)) return false;
+      }
+      if (dateRange.start) {
+        const dateValue = dateRange.field === 'createdAt' ? w.createdAt : w.lastModified;
+        if (dateValue < dateRange.start) return false;
+      }
+      if (dateRange.end) {
+        const dateValue = dateRange.field === 'createdAt' ? w.createdAt : w.lastModified;
+        if (dateValue > dateRange.end) return false;
+      }
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesTitle = w.title.toLowerCase().includes(query);
+        const matchesEvent = w.event.toLowerCase().includes(query);
+        const matchesCategory = w.category.toLowerCase().includes(query);
+        const matchesAuthor = w.nickname?.toLowerCase().includes(query);
+        if (!matchesTitle && !matchesEvent && !matchesCategory && !matchesAuthor) {
+          return false;
         }
-        if (searchQuery) {
-          const query = searchQuery.toLowerCase();
-          const matchesTitle = w.title.toLowerCase().includes(query);
-          const matchesEvent = w.event.toLowerCase().includes(query);
-          const matchesCategory = w.category.toLowerCase().includes(query);
-          const matchesAuthor = w.nickname?.toLowerCase().includes(query);
-          if (!matchesTitle && !matchesEvent && !matchesCategory && !matchesAuthor) {
-            return false;
-          }
-        }
-        return true;
-      }),
-    [writeups, selectedCategory, selectedEvent, selectedAuthor, searchQuery]
-  );
+      }
+      return true;
+    });
+
+    return result.sort((a, b) => {
+      switch (sortOption) {
+        case 'newest':
+          return b.createdAt.localeCompare(a.createdAt);
+        case 'oldest':
+          return a.createdAt.localeCompare(b.createdAt);
+        case 'title-asc':
+          return a.title.localeCompare(b.title);
+        case 'title-desc':
+          return b.title.localeCompare(a.title);
+        case 'event':
+          return a.event.localeCompare(b.event);
+        default:
+          return 0;
+      }
+    });
+  }, [writeups, selectedCategories, selectedEvents, selectedAuthors, dateRange, searchQuery, sortOption]);
 
   const handleClear = () => {
-    setSelectedCategory(null);
-    setSelectedEvent(null);
-    setSelectedAuthor(null);
+    setSelectedCategories(new Set());
+    setSelectedEvents(new Set());
+    setSelectedAuthors(new Set());
     setSearchQuery('');
+    setDateRange({ field: 'createdAt', start: null, end: null });
   };
+
+  const hasFilters = selectedCategories.size > 0 || selectedEvents.size > 0 || selectedAuthors.size > 0 || searchQuery || dateRange.start || dateRange.end;
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {filteredWriteups.length} writeup{filteredWriteups.length !== 1 ? 's' : ''} found
-        {(selectedCategory || selectedEvent || selectedAuthor || searchQuery) && ' (filtered)'}.
+        {hasFilters && ' (filtered)'}.
       </div>
       <motion.header
         initial={{ opacity: 0, y: -20 }}
@@ -110,7 +181,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
               </motion.span>
               <span className="ml-2">writeup{filteredWriteups.length !== 1 ? 's' : ''}</span>
               <AnimatePresence>
-                {(selectedCategory || selectedEvent || selectedAuthor || searchQuery) && (
+                {hasFilters && (
                   <motion.span
                     initial={{ opacity: 0, scale: 0.8, x: -10 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -143,14 +214,18 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           categories={categories}
           events={events}
           authors={authors}
-          selectedCategory={selectedCategory}
-          selectedEvent={selectedEvent}
-          selectedAuthor={selectedAuthor}
+          selectedCategories={selectedCategories}
+          selectedEvents={selectedEvents}
+          selectedAuthors={selectedAuthors}
           searchQuery={searchQuery}
-          onCategoryChange={setSelectedCategory}
-          onEventChange={setSelectedEvent}
-          onAuthorChange={setSelectedAuthor}
+          sortOption={sortOption}
+          dateRange={dateRange}
+          onCategoryToggle={toggleCategory}
+          onEventToggle={toggleEvent}
+          onAuthorToggle={toggleAuthor}
           onSearchChange={setSearchQuery}
+          onSortChange={setSortOption}
+          onDateRangeChange={setDateRange}
           onClear={handleClear}
           isOpen={sidebarOpen}
         />
@@ -212,26 +287,40 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
                       >
                         <Link href={`/writeups/${w.slug.join('/')}`} className="block group mb-6">
                           <article className="border-[6px] border-black p-5 bg-white shadow-[8px_8px_0_0_#000] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0_0_#000] hover:rotate-[-0.5deg] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#000] transition-all duration-150">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <span className="font-bold bg-[#DFE104] border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide">
-                                    {w.event}
-                                  </span>
-                                  <span className={`font-bold border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide ${color.bg} ${color.text}`}>
-                                    {w.category}
-                                  </span>
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div className="flex-1">
+                                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                                    <span className="font-bold bg-[#DFE104] border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide">
+                                      {w.event}
+                                    </span>
+                                    <span className={`font-bold border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide ${color.bg} ${color.text}`}>
+                                      {w.category}
+                                    </span>
+                                    {w.nickname && (
+                                      <span className="text-xs font-bold bg-white border-2 border-black px-2 py-0.5">
+                                        by {w.nickname}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h3 className="text-xl sm:text-2xl font-display uppercase group-hover:underline decoration-[3px] underline-offset-4 tracking-tight mb-2">
+                                    {w.title}
+                                  </h3>
+                                  <div className="flex items-center gap-2 text-xs font-mono text-gray-600">
+                                    <span>{formatWriteupDate(w.createdAt)}</span>
+                                    {w.lastModified && w.lastModified !== w.createdAt && (
+                                      <>
+                                        <span className="text-gray-400">·</span>
+                                        <span>Updated {formatWriteupDate(w.lastModified)}</span>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
-                                <h3 className="text-xl sm:text-2xl font-display uppercase group-hover:underline decoration-[3px] underline-offset-4 tracking-tight">
-                                  {w.title}
-                                </h3>
+                                <div className="flex items-center font-bold text-base">
+                                  <span className="mr-2">Read</span>
+                                  <span className="text-xl">&rarr;</span>
+                                </div>
                               </div>
-                              <div className="flex items-center font-bold text-base">
-                                <span className="mr-2">Read</span>
-                                <span className="text-xl">&rarr;</span>
-                              </div>
-                            </div>
-                          </article>
+                            </article>
                         </Link>
                       </motion.div>
                     );
