@@ -19,6 +19,88 @@ interface HomeClientProps {
   authorStats: AuthorStats[];
 }
 
+const PIE_COLORS = [
+  '#DFE104',
+  '#A855F7',
+  '#06B6D4',
+  '#F97316',
+  '#EF4444',
+  '#22C55E',
+];
+
+const polarToCartesian = (cx: number, cy: number, r: number, angle: number) => {
+  const rad = (angle - 90) * Math.PI / 180;
+  return {
+    x: cx + r * Math.cos(rad),
+    y: cy + r * Math.sin(rad)
+  };
+};
+
+const getArcPath = (startAngle: number, endAngle: number, radius: number, cx: number, cy: number) => {
+  const start = polarToCartesian(cx, cy, radius, endAngle);
+  const end = polarToCartesian(cx, cy, radius, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
+};
+
+interface PieChartProps {
+  data: AuthorStats[];
+}
+
+function PieChart({ data }: PieChartProps) {
+  const radius = 80;
+  const cx = 100;
+  const cy = 100;
+  
+  const slices = data.reduce<{ author: string; count: number; percentage: number; startAngle: number; endAngle: number; color: string }[]>((acc, item, index) => {
+    const angleSize = (item.percentage / 100) * 360;
+    const startAngle = acc.length > 0 ? acc[acc.length - 1].endAngle : 0;
+    const endAngle = startAngle + angleSize;
+    
+    acc.push({
+      author: item.author,
+      count: item.count,
+      percentage: item.percentage,
+      startAngle,
+      endAngle,
+      color: PIE_COLORS[index % PIE_COLORS.length]
+    });
+    
+    return acc;
+  }, []);
+
+  return (
+    <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
+      <div className="border-[6px] border-black bg-white shadow-[8px_8px_0_0_#000] p-4">
+        <svg width="200" height="200" viewBox="0 0 200 200" aria-label={`Pie chart showing writeup contributions by ${data.length} authors`}>
+          {slices.map((slice) => (
+            <path
+              key={slice.author}
+              d={getArcPath(slice.startAngle, slice.endAngle, radius, cx, cy)}
+              fill={slice.color}
+              stroke="black"
+              strokeWidth="4"
+            />
+          ))}
+        </svg>
+      </div>
+      <div className="flex flex-col gap-3">
+        {slices.map((slice) => (
+          <div key={slice.author} className="flex items-center gap-3">
+            <div 
+              className="w-4 h-4 border-2 border-black flex-shrink-0" 
+              style={{ backgroundColor: slice.color }}
+            />
+            <span className="font-bold text-sm">{slice.author}</span>
+            <span className="text-sm font-mono">{slice.percentage}%</span>
+            <span className="text-xs text-zinc-500">({slice.count})</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function HomeClient({ featuredWriteup, recentWriteups, authorStats }: Omit<HomeClientProps, 'writeups'>) {
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-12">
@@ -193,21 +275,7 @@ export default function HomeClient({ featuredWriteup, recentWriteups, authorStat
           </p>
           <div className="mt-6 pt-4 border-t-2 border-black/20">
             <h3 className="font-display uppercase tracking-tight mb-4">Writeup Contributions</h3>
-            <div className="space-y-3">
-              {authorStats.map(({ author, count, percentage }) => (
-                <div key={author} className="flex items-center gap-3">
-                  <span className="font-bold w-24 text-sm">{author}</span>
-                  <div className="flex-1 h-6 bg-zinc-100 border-2 border-black overflow-hidden">
-                    <div
-                      className="h-full bg-[#DFE104] transition-all duration-300"
-                      style={{ width: `${percentage}%` }}
-                    />
-                  </div>
-                  <span className="text-sm font-mono w-16 text-right">{percentage}%</span>
-                  <span className="text-xs text-zinc-500">({count})</span>
-                </div>
-              ))}
-            </div>
+            <PieChart data={authorStats} />
           </div>
           <div className="mt-6 pt-4 border-t-2 border-black/20">
             <motion.div

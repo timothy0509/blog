@@ -32,7 +32,7 @@ export default function WriteupCard({ writeup }: WriteupCardProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
-        className="text-xl sm:text-2xl font-display uppercase leading-tight tracking-tight"
+        className="text-xl sm:text-2xl font-display uppercase leading-tight tracking-tight break-words"
       >
         <Link 
           href={`/writeups/${writeup.slug.join('/')}`} 
