@@ -57,7 +57,7 @@ function CollapsibleSection({
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             style={{ overflow: 'hidden' }}
           >
-            {children}
+            <div className="pb-2">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
