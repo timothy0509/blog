@@ -1,7 +1,69 @@
 'use client';
 
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryColor } from '@/lib/colors';
+
+interface CollapsibleSectionProps {
+  title: string;
+  children: React.ReactNode;
+  defaultExpanded?: boolean;
+  badge?: number;
+  delay?: number;
+}
+
+function CollapsibleSection({
+  title,
+  children,
+  defaultExpanded = true,
+  badge,
+  delay = 0,
+}: CollapsibleSectionProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay }}
+      className="mb-10"
+    >
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+        aria-expanded={isExpanded}
+      >
+        <span className="flex items-center gap-2">
+          {title}
+          {badge !== undefined && badge > 0 && (
+            <span className="text-sm bg-black text-white px-2 py-0.5">{badge}</span>
+          )}
+        </span>
+        <motion.span
+          animate={{ rotate: isExpanded ? 180 : 0 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+          className="text-lg"
+          aria-hidden="true"
+        >
+          ▼
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: 'hidden' }}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
 
 type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'event';
 
@@ -71,15 +133,9 @@ export default function FilterSidebar({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-      className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-72 shrink-0 md:sticky md:top-24 md:max-h-[calc(100vh-8rem)] md:overflow-y-auto px-2 md:pl-2 md:pr-8 pb-4`}
+      className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-80 shrink-0 md:sticky md:top-24 md:max-h-[calc(100vh-8rem)] md:overflow-y-auto px-3 md:pl-3 md:pr-6 pb-6`}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
-        className="mb-8"
-      >
-        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">Search</h3>
+      <CollapsibleSection title="Search" defaultExpanded={true} delay={0.05}>
         <div className="relative">
           <input
             type="text"
@@ -99,15 +155,9 @@ export default function FilterSidebar({
             </button>
           )}
         </div>
-      </motion.div>
+      </CollapsibleSection>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-        className="mb-8"
-      >
-        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">Sort By</h3>
+      <CollapsibleSection title="Sort By" defaultExpanded={true} delay={0.1}>
         <motion.div
           initial="initial"
           animate="animate"
@@ -116,11 +166,11 @@ export default function FilterSidebar({
             animate: {
               transition: {
                 staggerChildren: 0.02,
-                delayChildren: 0.15,
+                delayChildren: 0.05,
               },
             },
           }}
-          className="flex flex-wrap gap-2"
+          className="grid grid-cols-2 gap-2"
         >
           {SORT_OPTIONS.map((opt) => {
             const isSelected = sortOption === opt.value;
@@ -147,17 +197,12 @@ export default function FilterSidebar({
             );
           })}
         </motion.div>
-      </motion.div>
+      </CollapsibleSection>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-        className="mb-8"
-      >
-        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">Date Range</h3>
-        <div className="flex flex-col gap-3">
-          <div className="flex gap-2">
+      <CollapsibleSection title="Date Range" defaultExpanded={false} delay={0.15}>
+        <div className="flex flex-col gap-4">
+          <div>
+            <label className="text-xs font-bold block mb-2 uppercase tracking-wide">Filter By</label>
             <select
               value={dateRange.field}
               onChange={(e) =>
@@ -167,15 +212,15 @@ export default function FilterSidebar({
                 })
               }
               aria-label="Date field to filter by"
-              className="border-4 border-black px-2 py-2 text-sm font-bold bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+              className="w-full border-4 border-black px-3 py-2 text-sm font-bold bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[2px_2px_0_0_#000]"
             >
-              <option value="createdAt">Created</option>
-              <option value="lastModified">Modified</option>
+              <option value="createdAt">Created Date</option>
+              <option value="lastModified">Modified Date</option>
             </select>
           </div>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <label className="text-xs font-bold block mb-1">From</label>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-bold block mb-2 uppercase tracking-wide">From</label>
               <input
                 type="date"
                 value={dateRange.start ?? ''}
@@ -186,11 +231,11 @@ export default function FilterSidebar({
                   })
                 }
                 aria-label="Start date"
-                className="w-full border-4 border-black px-2 py-2 font-mono text-sm bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+                className="w-full border-4 border-black px-2 py-2 font-mono text-xs bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[2px_2px_0_0_#000]"
               />
             </div>
-            <div className="flex-1">
-              <label className="text-xs font-bold block mb-1">To</label>
+            <div>
+              <label className="text-xs font-bold block mb-2 uppercase tracking-wide">To</label>
               <input
                 type="date"
                 value={dateRange.end ?? ''}
@@ -201,33 +246,27 @@ export default function FilterSidebar({
                   })
                 }
                 aria-label="End date"
-                className="w-full border-4 border-black px-2 py-2 font-mono text-sm bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+                className="w-full border-4 border-black px-2 py-2 font-mono text-xs bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[2px_2px_0_0_#000]"
               />
             </div>
           </div>
           {(dateRange.start || dateRange.end) && (
             <button
               onClick={() => onDateRangeChange({ ...dateRange, start: null, end: null })}
-              className="text-xs font-bold underline hover:no-underline"
+              className="text-xs font-bold underline hover:no-underline self-start"
             >
               Clear dates
             </button>
           )}
         </div>
-      </motion.div>
+      </CollapsibleSection>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
-        className="mb-8"
+      <CollapsibleSection
+        title="Categories"
+        defaultExpanded={false}
+        badge={selectedCategories.size}
+        delay={0.2}
       >
-        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">
-          Categories
-          {selectedCategories.size > 0 && (
-            <span className="ml-2 text-sm bg-black text-white px-2 py-0.5">{selectedCategories.size}</span>
-          )}
-        </h3>
         <motion.div
           initial="initial"
           animate="animate"
@@ -235,12 +274,12 @@ export default function FilterSidebar({
             initial: {},
             animate: {
               transition: {
-                staggerChildren: 0.03,
-                delayChildren: 0.25,
+                staggerChildren: 0.02,
+                delayChildren: 0.05,
               },
             },
           }}
-          className="flex flex-wrap md:flex-col gap-2"
+          className="grid grid-cols-1 md:grid-cols-2 gap-2"
         >
           {categories.map((cat) => {
             const color = getCategoryColor(cat);
@@ -257,7 +296,7 @@ export default function FilterSidebar({
                 aria-pressed={isSelected}
                 whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
                 whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${color.bg} ${color.text} ${
+                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] ${color.bg} ${color.text} ${
                   isSelected
                     ? 'shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
                     : 'hover:shadow-[4px_4px_0_0_#000]'
@@ -268,20 +307,14 @@ export default function FilterSidebar({
             );
           })}
         </motion.div>
-      </motion.div>
+      </CollapsibleSection>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
-        className="mb-8"
+      <CollapsibleSection
+        title="Events"
+        defaultExpanded={false}
+        badge={selectedEvents.size}
+        delay={0.25}
       >
-        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">
-          Events
-          {selectedEvents.size > 0 && (
-            <span className="ml-2 text-sm bg-black text-white px-2 py-0.5">{selectedEvents.size}</span>
-          )}
-        </h3>
         <motion.div
           initial="initial"
           animate="animate"
@@ -290,11 +323,11 @@ export default function FilterSidebar({
             animate: {
               transition: {
                 staggerChildren: 0.02,
-                delayChildren: 0.35,
+                delayChildren: 0.05,
               },
             },
           }}
-          className="flex flex-wrap md:flex-col gap-2"
+          className="flex flex-col gap-2"
         >
           {events.map((event) => {
             const isSelected = selectedEvents.has(event);
@@ -310,7 +343,7 @@ export default function FilterSidebar({
                 aria-pressed={isSelected}
                 whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
                 whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${
+                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] text-left ${
                   isSelected
                     ? 'bg-[#DFE104] text-black shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
                     : 'bg-white hover:bg-[#DFE104] hover:shadow-[4px_4px_0_0_#000]'
@@ -321,20 +354,14 @@ export default function FilterSidebar({
             );
           })}
         </motion.div>
-      </motion.div>
+      </CollapsibleSection>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.4 }}
-        className="mb-8"
+      <CollapsibleSection
+        title="Authors"
+        defaultExpanded={false}
+        badge={selectedAuthors.size}
+        delay={0.3}
       >
-        <h3 className="font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide">
-          Authors
-          {selectedAuthors.size > 0 && (
-            <span className="ml-2 text-sm bg-black text-white px-2 py-0.5">{selectedAuthors.size}</span>
-          )}
-        </h3>
         <motion.div
           initial="initial"
           animate="animate"
@@ -343,11 +370,11 @@ export default function FilterSidebar({
             animate: {
               transition: {
                 staggerChildren: 0.02,
-                delayChildren: 0.45,
+                delayChildren: 0.05,
               },
             },
           }}
-          className="flex flex-wrap md:flex-col gap-2"
+          className="flex flex-col gap-2"
         >
           {authors.map((author) => {
             const isSelected = selectedAuthors.has(author);
@@ -363,7 +390,7 @@ export default function FilterSidebar({
                 aria-pressed={isSelected}
                 whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
                 whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${
+                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] text-left ${
                   isSelected
                     ? 'bg-blue-500 text-white shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
                     : 'bg-white hover:bg-blue-500 hover:text-white hover:shadow-[4px_4px_0_0_#000]'
@@ -383,7 +410,7 @@ export default function FilterSidebar({
             aria-pressed={selectedAuthors.has('Unknown')}
             whileHover={!selectedAuthors.has('Unknown') ? { x: -2, y: -2 } : undefined}
             whileTap={{ scale: 0.95 }}
-            className={`border-4 border-black px-3 py-3 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] border-dashed ${
+            className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] text-left border-dashed ${
               selectedAuthors.has('Unknown')
                 ? 'bg-gray-500 text-white shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
                 : 'bg-white hover:bg-gray-500 hover:text-white hover:shadow-[4px_4px_0_0_#000]'
@@ -392,7 +419,7 @@ export default function FilterSidebar({
             Unknown
           </motion.button>
         </motion.div>
-      </motion.div>
+      </CollapsibleSection>
 
       <AnimatePresence>
         {hasFilters && (
@@ -404,7 +431,7 @@ export default function FilterSidebar({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onClear}
-            className="border-4 border-black px-4 py-3 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] min-h-[44px]"
+            className="w-full border-4 border-black px-4 py-3 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] min-h-[44px] mt-4"
           >
             Clear Filters
           </motion.button>
