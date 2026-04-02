@@ -55,9 +55,8 @@ function CollapsibleSection({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden' }}
           >
-            <div className="pb-4">{children}</div>
+            {children}
           </motion.div>
         )}
       </AnimatePresence>
