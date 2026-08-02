@@ -13,10 +13,10 @@ export default function BrutalCard({
   as: Component = 'article',
   featured = false 
 }: BrutalCardProps) {
-  const baseClasses = 'border-[6px] border-black bg-white shadow-[8px_8px_0_0_#000] flex flex-col transition-all duration-150';
-  const hoverClasses = 'hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0_0_#000] hover:rotate-[-0.5deg]';
-  const activeClasses = 'active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#000]';
-  const featuredClasses = featured ? 'rotate-[1deg]' : '';
+  const baseClasses = 'border-4 border-black bg-white shadow-[8px_8px_0_0_#fe00fe] flex flex-col transition-all duration-150';
+  const hoverClasses = 'hover:translate-x-2 hover:translate-y-2 hover:shadow-none';
+  const activeClasses = 'active:translate-x-2 active:translate-y-2 active:shadow-none';
+  const featuredClasses = featured ? '' : '';
   
   return (
     <Component 

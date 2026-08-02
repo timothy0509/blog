@@ -52,7 +52,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
     <div className="flex items-center gap-3">
       <button
         onClick={handleCopyLink}
-        className="flex items-center gap-2 border-4 border-black px-4 py-3 font-bold text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none min-h-[44px]"
+        className="flex items-center gap-2 border-2 border-black px-4 py-3 label-caps text-sm bg-white shadow-[4px_4px_0_0_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none min-h-[44px]"
         aria-label="Copy link"
         title="Copy link"
       >
@@ -64,7 +64,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
         href={twitterUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-2 border-4 border-black px-4 py-3 font-bold text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none min-h-[44px]"
+        className="flex items-center gap-2 border-2 border-black px-4 py-3 label-caps text-sm bg-white shadow-[4px_4px_0_0_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-100 focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:outline-none min-h-[44px]"
         aria-label="Share on X (Twitter)"
         title="Share on X (Twitter)"
       >

@@ -1,19 +1,61 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getWriteups, getWriteupBySlug } from '@/lib/github';
-import { getCategoryColor } from '@/lib/colors';
-import { formatWriteupDate } from '@/lib/date';
+import { getWriteups, getWriteupBySlug, WriteupInfo } from '@/lib/github';
 import { config } from '@/lib/config';
-import Link from 'next/link';
 import WriteupContent from '@/components/WriteupContent';
 import ReadingProgress from '@/components/ReadingProgress';
-import ShareButtons from '@/components/ShareButtons';
-import RelatedWriteups from '@/components/RelatedWriteups';
+import WriteupDetailClient from '@/components/WriteupDetailClient';
 
 function calculateReadingTime(text: string): number {
   const wordsPerMinute = 200;
   const wordCount = text.trim().split(/\s+/).length;
   return Math.ceil(wordCount / wordsPerMinute) || 1;
+}
+
+function extractDescription(content: string): string | null {
+  const lines = content.split('\n');
+  const paragraphs: string[] = [];
+  let current = '';
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('#') || trimmed.startsWith('```') || trimmed.startsWith('|') || trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('>')) {
+      if (current) {
+        paragraphs.push(current.trim());
+        current = '';
+      }
+      continue;
+    }
+    if (!trimmed) {
+      if (current) {
+        paragraphs.push(current.trim());
+        current = '';
+      }
+      continue;
+    }
+    current = current ? `${current} ${trimmed}` : trimmed;
+  }
+  if (current) paragraphs.push(current.trim());
+
+  const first = paragraphs.find((p) => p.length > 40);
+  if (!first) return null;
+  return first.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').slice(0, 280);
+}
+
+function getSameEventWriteups(current: WriteupInfo, all: WriteupInfo[]): WriteupInfo[] {
+  const currentSlug = current.slug.join('/');
+  return all
+    .filter((w) => w.event === current.event && w.slug.join('/') !== currentSlug)
+    .slice(0, 3);
+}
+
+function getNextWriteup(current: WriteupInfo, all: WriteupInfo[]): WriteupInfo | null {
+  const currentSlug = current.slug.join('/');
+  const idx = all.findIndex((w) => w.slug.join('/') === currentSlug);
+  if (idx === -1) return null;
+  if (idx + 1 < all.length) return all[idx + 1];
+  if (idx > 0) return all[0];
+  return null;
 }
 
 export const dynamicParams = true;
@@ -76,78 +118,24 @@ export default async function WriteupDetailPage({
 
   const writeups = await getWriteups();
   const readingTime = calculateReadingTime(detail.content);
-  const categoryColor = getCategoryColor(detail.category);
+  const description = extractDescription(detail.content);
   const pageUrl = `${config.site.url}/writeups/${detail.slug.map((s) => encodeURIComponent(s)).join('/')}`;
+  const relatedSameEvent = getSameEventWriteups(detail, writeups);
+  const nextWriteup = getNextWriteup(detail, writeups);
 
   return (
     <>
       <ReadingProgress />
-      <article className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <Link
-            href="/writeups"
-            className="inline-block border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-          >
-            &larr; Back to Writeups
-          </Link>
-        </div>
-
-        <header className="border-b-[6px] border-black pb-8 mb-8">
-          <div className="flex flex-wrap gap-3 mb-6">
-            <span className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]">
-              {detail.event}
-            </span>
-            <span className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-base transform rotate-1 shadow-[4px_4px_0_0_#000]`}>
-              {detail.category}
-            </span>
-          </div>
-
-          <h1 className="text-display font-display uppercase leading-none mb-4 tracking-tight">
-            {detail.title}
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            {detail.nickname && (
-              <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1 shadow-[4px_4px_0_0_#DFE104]">
-                written by {detail.nickname}
-              </div>
-            )}
-            <div className="inline-block bg-black text-white px-4 py-2 font-bold text-base border-4 border-black transform -rotate-1">
-              {readingTime} min read
-            </div>
-            <div className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]">
-              <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
-            </div>
-            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1">
-              Created: {formatWriteupDate(detail.createdAt)}
-            </div>
-            <div className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1">
-              Updated: {formatWriteupDate(detail.lastModified)}
-            </div>
-          </div>
-
-          <ShareButtons title={detail.title} url={pageUrl} />
-        </header>
-
+      <WriteupDetailClient
+        writeup={detail}
+        description={description}
+        readingTime={readingTime}
+        pageUrl={pageUrl}
+        relatedSameEvent={relatedSameEvent}
+        nextWriteup={nextWriteup}
+      >
         <WriteupContent content={detail.content} />
-
-        <RelatedWriteups currentWriteup={detail} allWriteups={writeups} />
-
-        <div className="mt-16 pt-8 border-t-[6px] border-black">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <div className="bg-black text-white p-6 font-bold text-center text-lg shadow-[8px_8px_0_0_#DFE104] border-4 border-[#DFE104] max-w-lg transform -rotate-1">
-              <span className="text-2xl block mb-2">⚑</span>
-              FLAG CAPTURED
-            </div>
-            <Link
-              href="/writeups"
-              className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
-            >
-              Browse More Writeups&rarr;
-            </Link>
-          </div>
-        </div>
-      </article>
+      </WriteupDetailClient>
     </>
   );
 }

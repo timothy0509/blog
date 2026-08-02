@@ -24,14 +24,19 @@ export default async function Home() {
   const featuredSlug = featuredWriteup?.slug.join('/');
   const recentWriteups = writeups
     .filter((w) => w.slug.join('/') !== featuredSlug)
-    .slice(0, 6);
+    .slice(0, 4);
   const authorStats = calculateAuthorStats(writeups);
+  const contributorCount = new Set(
+    writeups.map((w) => w.nickname || w.writer || 'Unknown')
+  ).size;
 
   return (
-    <HomeClient 
-      featuredWriteup={featuredWriteup} 
-      recentWriteups={recentWriteups} 
+    <HomeClient
+      featuredWriteup={featuredWriteup}
+      recentWriteups={recentWriteups}
       authorStats={authorStats}
+      totalWriteups={writeups.length}
+      contributorCount={contributorCount}
     />
   );
 }
