@@ -31,10 +31,6 @@ export const metadata: Metadata = {
     default: 'SYJC CTF Writeups',
   },
   description: 'CTF writeups from Sing Yin Jockey Club - capturing flags together.',
-  icons: {
-    icon: '/syjc-logo.png',
-    apple: '/syjc-logo.png',
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
