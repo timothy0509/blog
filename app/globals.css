@@ -123,6 +123,37 @@
   background-size: 24px 24px;
 }
 
+/* Hide scrollbars by default; keep them only for forced-colors a11y */
+.scrollbar-hidden {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overscroll-behavior: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+@media (forced-colors: active) {
+  .scrollbar-hidden {
+    scrollbar-width: thin !important;
+    -ms-overflow-style: auto !important;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar-thumb {
+    background: CanvasText;
+  }
+}
+
 .bg-dot-grid {
   background-image: radial-gradient(#000 1px, transparent 1px);
   background-size: 16px 16px;

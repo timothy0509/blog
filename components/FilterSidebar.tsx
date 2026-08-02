@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getCategoryColor } from '@/lib/colors';
 
 type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'event';
@@ -75,6 +75,7 @@ export default function FilterSidebar({
   isOpen,
 }: FilterSidebarProps) {
   const [moreOpen, setMoreOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const allSelected = selectedCategories.size === 0;
   const hasFilters =
     selectedCategories.size > 0 ||
@@ -84,11 +85,31 @@ export default function FilterSidebar({
     dateRange.start ||
     dateRange.end;
 
+  // Wheel over the sidebar never scrolls the page — even at top/bottom.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      el.scrollTop += e.deltaY;
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false, capture: true });
+    return () => el.removeEventListener('wheel', onWheel, { capture: true });
+  }, []);
+
   return (
     <aside
       id="filter-sidebar"
-      className={`${isOpen ? 'block' : 'hidden'} lg:block lg:col-span-3 sticky top-28 flex flex-col gap-6`}
+      className={`${isOpen ? 'block' : 'hidden'} lg:block lg:col-span-3 sticky top-28 self-start w-full max-h-[calc(100vh-8rem)]`}
     >
+      <div
+        ref={scrollRef}
+        className="flex flex-col gap-6 max-h-[calc(100vh-8rem)] overflow-y-scroll scrollbar-hidden"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
       <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000]">
         <div className="flex items-center gap-2 mb-6">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#616200" strokeWidth="2" aria-hidden="true">
@@ -272,6 +293,7 @@ export default function FilterSidebar({
             )}
           </div>
         )}
+      </div>
       </div>
     </aside>
   );
