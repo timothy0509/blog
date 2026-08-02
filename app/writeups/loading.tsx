@@ -1,46 +1,49 @@
 export default function WriteupsLoading() {
   return (
-    <main id="main-content" className="flex-1 p-4 sm:p-6 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <div className="h-12 bg-[var(--brutal-zinc-200)] w-48 animate-pulse" />
-        </header>
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="w-full lg:w-64 shrink-0 order-2 lg:order-1">
-            <div className="brutal-card p-5 animate-pulse">
-              <div className="h-6 bg-[var(--brutal-zinc-200)] mb-4 w-20" />
-              <div className="space-y-3">
+    <div className="flex flex-col w-full">
+      <section className="w-full border-b-[6px] border-black">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-end justify-between gap-6 animate-pulse">
+          <div className="flex flex-col gap-2">
+            <div className="h-3 bg-[#e2e2e2] w-32" />
+            <div className="h-12 bg-[#e2e2e2] w-48" />
+          </div>
+          <div className="flex gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="border-l-4 border-[#e2e2e2] px-4">
+                <div className="h-3 bg-[#e2e2e2] w-24 mb-2" />
+                <div className="h-8 bg-[#e2e2e2] w-12" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto w-full px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <aside className="lg:col-span-3">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000] animate-pulse">
+              <div className="h-4 bg-[#e2e2e2] mb-6 w-32" />
+              <div className="space-y-2">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-8 bg-[var(--brutal-zinc-200)]" />
+                  <div key={i} className="h-12 bg-[#e2e2e2]" />
                 ))}
               </div>
             </div>
           </aside>
-          
-          <div className="flex-1 order-1 lg:order-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {[...Array(9)].map((_, i) => (
-                <div key={i} className="brutal-card p-5 animate-pulse">
-                  <div className="h-6 bg-[var(--brutal-zinc-200)] mb-4 w-3/4" />
-                  <div className="flex gap-2 mb-4">
-                    <div className="h-5 bg-[var(--brutal-zinc-200)] w-20" />
-                    <div className="h-5 bg-[var(--brutal-zinc-200)] w-24" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-3 bg-[var(--brutal-zinc-200)] w-full" />
-                    <div className="h-3 bg-[var(--brutal-zinc-200)] w-4/5" />
-                    <div className="h-3 bg-[var(--brutal-zinc-200)] w-3/5" />
-                  </div>
-                  <div className="mt-4 pt-4 border-t-2 border-[var(--brutal-zinc-200)]">
-                    <div className="h-4 bg-[var(--brutal-zinc-200)] w-24" />
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="lg:col-span-9 flex flex-col gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000] animate-pulse"
+              >
+                <div className="h-4 bg-[#e2e2e2] w-40 mb-4" />
+                <div className="h-8 bg-[#e2e2e2] w-3/4 mb-6" />
+                <div className="h-4 bg-[#e2e2e2] w-32" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

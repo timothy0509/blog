@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
-import { Geist_Mono } from 'next/font/google';
-import { Space_Grotesk } from 'next/font/google';
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import 'katex/dist/katex.min.css';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
-import { AnimatedFooter, AnimatedMain } from '@/components/animations/AnimatedLayout';
+import SiteFooter from '@/components/SiteFooter';
+import { AnimatedMain } from '@/components/animations/AnimatedLayout';
 import { config } from '@/lib/config';
 
-const geistMono = Geist_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
+  weight: ['400', '500', '700'],
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -56,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased min-h-screen flex flex-col selection:bg-[#DFE104] selection:text-black noise-overlay ${geistMono.variable} ${spaceGrotesk.variable} ${displayFont.variable} font-sans`}>
+      <body className={`min-h-screen flex flex-col selection:bg-[#DFE104] selection:text-black noise-overlay bg-graph-paper ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${displayFont.variable} font-sans`}>
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
@@ -64,12 +65,7 @@ export default function RootLayout({
         <AnimatedMain>
           {children}
         </AnimatedMain>
-        <AnimatedFooter>
-          <span className="font-bold tracking-widest text-xs sm:text-sm">&copy; {new Date().getFullYear()} SYJC CTF Writeups</span>
-          <span className="bg-red-600 text-black px-3 py-1 font-bold transform -rotate-1 border-2 border-white shadow-[4px_4px_0_0_#222] text-xs sm:text-sm">
-            NO RIGHTS RESERVED
-          </span>
-        </AnimatedFooter>
+        <SiteFooter />
       </body>
     </html>
   );

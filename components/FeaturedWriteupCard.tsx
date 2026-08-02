@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { WriteupInfo } from '@/lib/github';
 import { getCategoryColor } from '@/lib/colors';
-import { formatWriteupDate } from '@/lib/date';
 
 interface FeaturedWriteupCardProps {
   writeup: WriteupInfo;
@@ -12,90 +10,51 @@ interface FeaturedWriteupCardProps {
 
 export default function FeaturedWriteupCard({ writeup }: FeaturedWriteupCardProps) {
   const categoryColor = getCategoryColor(writeup.category);
+  const href = `/writeups/${writeup.slug.join('/')}`;
+  const fileHint = writeup.slug[writeup.slug.length - 1] ?? writeup.title;
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 30, rotate: 1 }}
-      animate={{ opacity: 1, y: 0, rotate: 1 }}
-      whileHover={{ x: -4, y: -4, rotate: -0.5 }}
-      whileTap={{ x: 2, y: 2 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className="border-[6px] border-black p-8 bg-white shadow-[12px_12px_0_0_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[4px_4px_0_0_#000] transition-shadow duration-150"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-        className="flex flex-wrap gap-3 mb-4"
-      >
-        <motion.span
-          initial={{ opacity: 0, scale: 0.8, rotate: -3 }}
-          animate={{ opacity: 1, scale: 1, rotate: -1 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-          className="bg-[#DFE104] border-2 border-black px-4 py-1 font-bold text-lg transform -rotate-1 uppercase"
-        >
-          Featured
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
-          className="font-bold bg-yellow-400 border-2 border-black px-3 py-1 text-sm tracking-wide uppercase"
-        >
-          {writeup.event}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, scale: 0.8, rotate: 3 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.25 }}
-          className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-2 border-black px-3 py-1 text-sm tracking-wide uppercase`}
-        >
-          {writeup.category}
-        </motion.span>
-      </motion.div>
+    <article className="bg-white border-[6px] border-black shadow-[12px_12px_0_0_#000] p-8 md:p-12 flex flex-col md:flex-row gap-12 items-center">
+      <div className={`w-full md:w-1/2 aspect-video overflow-hidden relative border-4 border-black ${categoryColor.bar}`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-30">
+          <pre className="label-code text-white text-xs leading-relaxed select-none pointer-events-none">
+{`$ cat ./${fileHint}
+# ${writeup.category.toUpperCase()}
+# ${writeup.event}
+...`}
+          </pre>
+        </div>
+        <div className="absolute bottom-4 left-4 label-code text-white">
+          FILE: {fileHint}
+        </div>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
-        className="flex flex-col gap-1 mb-4"
-      >
-        <span className="text-sm font-medium text-zinc-600">
-          {formatWriteupDate(writeup.createdAt)}
-        </span>
-        {writeup.nickname && (
-          <span className="text-xs text-zinc-500">
-            written by {writeup.nickname}
+      <div className="w-full md:w-1/2 flex flex-col gap-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className={`${categoryColor.bg} ${categoryColor.text} border-2 border-black px-4 py-1 label-caps`}>
+            {writeup.category}
           </span>
-        )}
-      </motion.div>
-
-      <motion.h2
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.35 }}
-        className="text-3xl md:text-4xl font-display uppercase leading-tight tracking-tight mb-6"
-      >
-        <Link
-          href={`/writeups/${writeup.slug.join('/')}`}
-          className="hover:underline decoration-[4px] underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-        >
+          <span className="label-code">{writeup.event}</span>
+        </div>
+        <h2 className="font-display text-2xl md:text-[32px] font-bold uppercase tracking-tight leading-none break-words">
           {writeup.title}
+        </h2>
+        {writeup.nickname && (
+          <p className="text-sm text-[#484833]">
+            written by {writeup.nickname}
+          </p>
+        )}
+        <Link href={href} className="group relative inline-flex self-start">
+          <span className="bg-[#DFE104] border-4 border-black px-8 py-3 label-caps z-10 transition-transform group-hover:translate-x-1 group-hover:translate-y-1">
+            Read Breakdown
+          </span>
+          <span
+            className="absolute inset-0 bg-black translate-x-2 translate-y-2 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"
+            aria-hidden="true"
+          />
         </Link>
-      </motion.h2>
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.4 }}
-      >
-        <Link
-          href={`/writeups/${writeup.slug.join('/')}`}
-          className="inline-block bg-black text-white py-3 px-6 font-bold uppercase text-lg hover:bg-[#DFE104] hover:text-black border-4 border-transparent hover:border-black transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-        >
-          Read Writeup &rarr;
-        </Link>
-      </motion.div>
-    </motion.article>
+      </div>
+    </article>
   );
 }

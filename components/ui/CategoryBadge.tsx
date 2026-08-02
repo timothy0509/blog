@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { getCategoryColor } from '@/lib/colors';
 
-type CategoryColor = { bg: string; text: string };
+type CategoryColor = { bg: string; text: string; bar?: string; hex?: string };
 
 interface CategoryBadgeProps {
   children: ReactNode;

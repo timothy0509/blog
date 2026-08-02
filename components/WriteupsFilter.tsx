@@ -1,12 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { WriteupInfo } from '@/lib/github';
-import { getCategoryColor } from '@/lib/colors';
-import { formatWriteupDate } from '@/lib/date';
 import FilterSidebar from './FilterSidebar';
-import Link from 'next/link';
+import WriteupListCard from './WriteupListCard';
 
 type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'event';
 
@@ -24,10 +21,14 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
   const [selectedEvents, setSelectedEvents] = useState<Set<string>>(new Set());
   const [selectedAuthors, setSelectedAuthors] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>('newest');
-  const [dateRange, setDateRange] = useState<DateRange>({ field: 'createdAt', start: null, end: null });
+  const [dateRange, setDateRange] = useState<DateRange>({
+    field: 'createdAt',
+    start: null,
+    end: null,
+  });
 
   const categories = useMemo(
     () => [...new Set(writeups.map((w) => w.category))].sort(),
@@ -42,33 +43,33 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
   const authors = useMemo(() => {
     const authorSet = new Set<string>();
     writeups.forEach((w) => {
-      if (w.nickname) {
-        authorSet.add(w.nickname);
-      }
+      if (w.nickname) authorSet.add(w.nickname);
     });
     return [...authorSet].sort();
+  }, [writeups]);
+
+  const contributorCount = useMemo(() => {
+    return new Set(writeups.map((w) => w.nickname || w.writer || 'Unknown')).size;
   }, [writeups]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) => {
       const next = new Set(prev);
-      if (next.has(cat)) {
-        next.delete(cat);
-      } else {
-        next.add(cat);
-      }
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
       return next;
     });
+  };
+
+  const selectAllCategories = () => {
+    setSelectedCategories(new Set());
   };
 
   const toggleEvent = (event: string) => {
     setSelectedEvents((prev) => {
       const next = new Set(prev);
-      if (next.has(event)) {
-        next.delete(event);
-      } else {
-        next.add(event);
-      }
+      if (next.has(event)) next.delete(event);
+      else next.add(event);
       return next;
     });
   };
@@ -76,11 +77,8 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
   const toggleAuthor = (author: string) => {
     setSelectedAuthors((prev) => {
       const next = new Set(prev);
-      if (next.has(author)) {
-        next.delete(author);
-      } else {
-        next.add(author);
-      }
+      if (next.has(author)) next.delete(author);
+      else next.add(author);
       return next;
     });
   };
@@ -130,7 +128,15 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           return 0;
       }
     });
-  }, [writeups, selectedCategories, selectedEvents, selectedAuthors, dateRange, searchQuery, sortOption]);
+  }, [
+    writeups,
+    selectedCategories,
+    selectedEvents,
+    selectedAuthors,
+    dateRange,
+    searchQuery,
+    sortOption,
+  ]);
 
   const handleClear = () => {
     setSelectedCategories(new Set());
@@ -140,195 +146,107 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
     setDateRange({ field: 'createdAt', start: null, end: null });
   };
 
-  const hasFilters = selectedCategories.size > 0 || selectedEvents.size > 0 || selectedAuthors.size > 0 || searchQuery || dateRange.start || dateRange.end;
+  const hasFilters =
+    selectedCategories.size > 0 ||
+    selectedEvents.size > 0 ||
+    selectedAuthors.size > 0 ||
+    searchQuery ||
+    dateRange.start ||
+    dateRange.end;
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="flex flex-col w-full">
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {filteredWriteups.length} writeup{filteredWriteups.length !== 1 ? 's' : ''} found
-        {hasFilters && ' (filtered)'}.
+        {hasFilters ? ' (filtered)' : ''}.
       </div>
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-        className="mb-8 pb-6 border-b-[6px] border-black"
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-              className="text-display font-display uppercase leading-none mb-2 tracking-tight"
-            >
-              All Writeups
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-              className="text-lg font-bold"
-            >
-              <motion.span
-                key={filteredWriteups.length}
-                initial={{ scale: 1.2 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.1 }}
-                className="bg-black text-white px-2 py-0.5"
-              >
-                {filteredWriteups.length}
-              </motion.span>
-              <span className="ml-2">writeup{filteredWriteups.length !== 1 ? 's' : ''}</span>
-              <AnimatePresence>
-                {hasFilters && (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.8, x: -10 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, x: 10 }}
-                    transition={{ duration: 0.1 }}
-                    className="ml-2 text-sm bg-[#DFE104] px-2 py-0.5 border-2 border-black"
-                  >
-                    (filtered)
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.p>
+
+      <section className="w-full border-b-[6px] border-black">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-end justify-between gap-6">
+          <div className="flex flex-col gap-2">
+            <span className="label-caps text-[#484833] tracking-widest">
+              Database Archives
+            </span>
+            <h1 className="font-display text-display font-bold uppercase leading-none">
+              Writeups
+            </h1>
           </div>
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
+          <div className="flex gap-6 overflow-x-auto pb-2 md:pb-0">
+            <div className="flex flex-col border-l-4 border-[#616200] px-4">
+              <span className="label-code text-[#484833]">TOTAL_ENTRIES</span>
+              <span className="font-display text-2xl md:text-[32px] font-bold">
+                {writeups.length}
+              </span>
+            </div>
+            <div className="flex flex-col border-l-4 border-[#06B6D4] px-4">
+              <span className="label-code text-[#484833]">CONTRIBUTORS</span>
+              <span className="font-display text-2xl md:text-[32px] font-bold">
+                {contributorCount}
+              </span>
+            </div>
+            <div className="flex flex-col border-l-4 border-[#fe00fe] px-4">
+              <span className="label-code text-[#484833]">SHOWING</span>
+              <span className="font-display text-2xl md:text-[32px] font-bold">
+                {filteredWriteups.length}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto w-full px-6 py-12">
+        <div className="flex justify-end mb-4 lg:hidden">
+          <button
+            type="button"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+            className="border-2 border-black px-4 py-2 label-caps bg-[#DFE104] shadow-[4px_4px_0_0_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
             aria-expanded={sidebarOpen}
             aria-controls="filter-sidebar"
           >
             Filters {sidebarOpen ? '▲' : '▼'}
-          </motion.button>
+          </button>
         </div>
-      </motion.header>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <FilterSidebar
-          categories={categories}
-          events={events}
-          authors={authors}
-          selectedCategories={selectedCategories}
-          selectedEvents={selectedEvents}
-          selectedAuthors={selectedAuthors}
-          searchQuery={searchQuery}
-          sortOption={sortOption}
-          dateRange={dateRange}
-          onCategoryToggle={toggleCategory}
-          onEventToggle={toggleEvent}
-          onAuthorToggle={toggleAuthor}
-          onSearchChange={setSearchQuery}
-          onSortChange={setSortOption}
-          onDateRangeChange={setDateRange}
-          onClear={handleClear}
-          isOpen={sidebarOpen}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <FilterSidebar
+            categories={categories}
+            events={events}
+            authors={authors}
+            selectedCategories={selectedCategories}
+            selectedEvents={selectedEvents}
+            selectedAuthors={selectedAuthors}
+            searchQuery={searchQuery}
+            sortOption={sortOption}
+            dateRange={dateRange}
+            onCategoryToggle={toggleCategory}
+            onSelectAllCategories={selectAllCategories}
+            onEventToggle={toggleEvent}
+            onAuthorToggle={toggleAuthor}
+            onSearchChange={setSearchQuery}
+            onSortChange={setSortOption}
+            onDateRangeChange={setDateRange}
+            onClear={handleClear}
+            isOpen={sidebarOpen}
+          />
 
-        <div className="flex-1">
-          <AnimatePresence mode="wait">
+          <div className="lg:col-span-9 flex flex-col gap-6">
             {filteredWriteups.length === 0 ? (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.15 }}
-                className="border-[6px] border-black p-8 bg-white shadow-[8px_8px_0_0_#000] text-center"
-              >
-                <motion.p
-                  initial={{ scale: 1 }}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 0.3, times: [0, 0.5, 1] }}
-                  className="text-xl font-bold mb-4"
-                >
-                  No writeups match your filters.
-                </motion.p>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+              <div className="border-4 border-black p-8 bg-white shadow-[8px_8px_0_0_#000] text-center">
+                <p className="text-xl font-bold mb-4">No writeups match your filters.</p>
+                <button
+                  type="button"
                   onClick={handleClear}
-                  className="border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-[#DFE104] hover:bg-black hover:text-white transition-colors duration-100 shadow-[4px_4px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
+                  className="border-2 border-black px-4 py-2 label-caps bg-[#DFE104] shadow-[4px_4px_0_0_#000]"
                 >
                   Clear Filters
-                </motion.button>
-              </motion.div>
+                </button>
+              </div>
             ) : (
-              <motion.div
-                key="list"
-                initial="initial"
-                animate="animate"
-                variants={{
-                  initial: {},
-                  animate: {
-                    transition: {
-                      staggerChildren: 0.06,
-                    },
-                  },
-                }}
-              >
-                <AnimatePresence>
-                  {filteredWriteups.map((w) => {
-                    const color = getCategoryColor(w.category);
-                    return (
-                      <motion.div
-                        key={w.path}
-                        variants={{
-                          initial: { opacity: 0, y: 20 },
-                          animate: { opacity: 1, y: 0 },
-                          exit: { opacity: 0, x: -20 },
-                        }}
-                        transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-                      >
-                        <Link href={`/writeups/${w.slug.join('/')}`} className="block group mb-6">
-                          <article className="border-[6px] border-black p-5 bg-white shadow-[8px_8px_0_0_#000] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[12px_12px_0_0_#000] hover:rotate-[-0.5deg] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#000] transition-all duration-150">
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <div className="flex-1">
-                                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                                    <span className="font-bold bg-[#DFE104] border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide">
-                                      {w.event}
-                                    </span>
-                                    <span className={`font-bold border-2 border-black px-2.5 py-1 text-xs uppercase tracking-wide ${color.bg} ${color.text}`}>
-                                      {w.category}
-                                    </span>
-                                    {w.nickname && (
-                                      <span className="text-xs font-bold bg-white border-2 border-black px-2 py-0.5">
-                                        by {w.nickname}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <h3 className="text-xl sm:text-2xl font-display uppercase group-hover:underline decoration-[3px] underline-offset-4 tracking-tight mb-2">
-                                    {w.title}
-                                  </h3>
-                                  <div className="flex items-center gap-2 text-xs font-mono text-gray-600">
-                                    <span>{formatWriteupDate(w.createdAt)}</span>
-                                    {w.lastModified && w.lastModified !== w.createdAt && (
-                                      <>
-                                        <span className="text-gray-400">·</span>
-                                        <span>Updated {formatWriteupDate(w.lastModified)}</span>
-                                      </>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="flex items-center font-bold text-base">
-                                  <span className="mr-2">Read</span>
-                                  <span className="text-xl">&rarr;</span>
-                                </div>
-                              </div>
-                            </article>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </motion.div>
+              filteredWriteups.map((w) => (
+                <WriteupListCard key={w.path} writeup={w} />
+              ))
             )}
-          </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

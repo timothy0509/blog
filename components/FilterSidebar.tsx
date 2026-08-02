@@ -1,68 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryColor } from '@/lib/colors';
-
-interface CollapsibleSectionProps {
-  title: string;
-  children: React.ReactNode;
-  defaultExpanded?: boolean;
-  badge?: number;
-  delay?: number;
-}
-
-function CollapsibleSection({
-  title,
-  children,
-  defaultExpanded = true,
-  badge,
-  delay = 0,
-}: CollapsibleSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1], delay }}
-      className="mb-10"
-    >
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between font-bold text-base uppercase mb-4 border-b-4 border-black pb-2 tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-        aria-expanded={isExpanded}
-      >
-        <span className="flex items-center gap-2">
-          {title}
-          {badge !== undefined && badge > 0 && (
-            <span className="text-sm bg-black text-white px-2 py-0.5">{badge}</span>
-          )}
-        </span>
-        <motion.span
-          animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="text-lg"
-          aria-hidden="true"
-        >
-          ▼
-        </motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
 
 type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'event';
 
@@ -83,6 +22,7 @@ interface FilterSidebarProps {
   sortOption: SortOption;
   dateRange: DateRange;
   onCategoryToggle: (category: string) => void;
+  onSelectAllCategories: () => void;
   onEventToggle: (event: string) => void;
   onAuthorToggle: (author: string) => void;
   onSearchChange: (query: string) => void;
@@ -100,6 +40,20 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'event', label: 'Event' },
 ];
 
+const CATEGORY_LABELS: Record<string, string> = {
+  web: 'WEB EXPLOITATION',
+  crypto: 'CRYPTOGRAPHY',
+  pwn: 'PWN / BINARY',
+  reverse: 'REVERSE ENG',
+  rev: 'REVERSE ENG',
+  forensics: 'FORENSICS',
+  misc: 'MISC',
+};
+
+function categoryLabel(cat: string) {
+  return CATEGORY_LABELS[cat.toLowerCase()] ?? cat.toUpperCase();
+}
+
 export default function FilterSidebar({
   categories,
   events,
@@ -111,6 +65,7 @@ export default function FilterSidebar({
   sortOption,
   dateRange,
   onCategoryToggle,
+  onSelectAllCategories,
   onEventToggle,
   onAuthorToggle,
   onSearchChange,
@@ -119,6 +74,8 @@ export default function FilterSidebar({
   onClear,
   isOpen,
 }: FilterSidebarProps) {
+  const [moreOpen, setMoreOpen] = useState(false);
+  const allSelected = selectedCategories.size === 0;
   const hasFilters =
     selectedCategories.size > 0 ||
     selectedEvents.size > 0 ||
@@ -128,314 +85,194 @@ export default function FilterSidebar({
     dateRange.end;
 
   return (
-    <motion.aside
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-      className={`${isOpen ? 'block' : 'hidden'} md:block w-full md:w-80 shrink-0 md:sticky md:top-24 md:max-h-[calc(100vh-8rem)] md:overflow-y-auto px-3 md:pl-3 md:pr-6 pb-6`}
+    <aside
+      id="filter-sidebar"
+      className={`${isOpen ? 'block' : 'hidden'} lg:block lg:col-span-3 sticky top-28 flex flex-col gap-6`}
     >
-      <CollapsibleSection title="Search" defaultExpanded={true} delay={0.05}>
+      <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000]">
+        <div className="flex items-center gap-2 mb-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#616200" strokeWidth="2" aria-hidden="true">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+          </svg>
+          <h2 className="label-caps">Category Filters</h2>
+        </div>
+        <nav className="flex flex-col gap-2" aria-label="Category filters">
+          <button
+            type="button"
+            onClick={onSelectAllCategories}
+            aria-pressed={allSelected}
+            className={`w-full text-left label-caps px-4 py-3 border-2 border-black transition-all min-h-[44px] ${
+              allSelected
+                ? 'bg-[#DFE104] shadow-[4px_4px_0_0_#000]'
+                : 'bg-white hover:bg-[#DFE104]'
+            }`}
+          >
+            ALL CHALLENGES
+          </button>
+          {categories.map((cat) => {
+            const color = getCategoryColor(cat);
+            const isSelected = selectedCategories.has(cat);
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => onCategoryToggle(cat)}
+                aria-pressed={isSelected}
+                className={`w-full text-left label-caps px-4 py-3 border-2 border-black transition-all min-h-[44px] ${
+                  isSelected
+                    ? `${color.bg} ${color.text} shadow-[4px_4px_0_0_#000]`
+                    : 'bg-white hover:bg-[#f3f3f3]'
+                }`}
+              >
+                {categoryLabel(cat)}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div className="bg-black text-white p-6 shadow-[8px_8px_0_0_#000]">
+        <h3 className="label-code mb-2 uppercase opacity-70">Search_Terminal</h3>
         <div className="relative">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search writeups..."
-            aria-label="Search writeups by title, event, category, or author"
-            className="w-full border-4 border-black px-4 py-3 font-mono text-sm bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] placeholder:text-gray-400 min-h-[44px]"
+            placeholder="TYPE_QUERY_HERE..."
+            aria-label="Search writeups"
+            className="w-full bg-transparent border-b-2 border-white label-code py-2 focus:outline-none focus:border-[#DFE104] transition-colors placeholder:opacity-50"
           />
-          {searchQuery && (
-            <button
-              onClick={() => onSearchChange('')}
-              aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors font-bold"
-            >
-              ×
-            </button>
-          )}
+          <span className="absolute right-0 bottom-2 label-code opacity-60" aria-hidden="true">
+            {'[>]'}
+          </span>
         </div>
-      </CollapsibleSection>
+      </div>
 
-      <CollapsibleSection title="Sort By" defaultExpanded={true} delay={0.1}>
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={{
-            initial: {},
-            animate: {
-              transition: {
-                staggerChildren: 0.02,
-                delayChildren: 0.05,
-              },
-            },
-          }}
-          className="grid grid-cols-2 gap-2"
+      <div className="bg-white border-4 border-black shadow-[8px_8px_0_0_#000]">
+        <button
+          type="button"
+          onClick={() => setMoreOpen(!moreOpen)}
+          className="w-full flex items-center justify-between label-caps px-6 py-4 border-b-4 border-black hover:bg-[#f3f3f3] transition-colors"
+          aria-expanded={moreOpen}
         >
-          {SORT_OPTIONS.map((opt) => {
-            const isSelected = sortOption === opt.value;
-            return (
-              <motion.button
-                key={opt.value}
-                variants={{
-                  initial: { opacity: 0, scale: 0.9 },
-                  animate: { opacity: 1, scale: 1 },
-                }}
-                transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-                onClick={() => onSortChange(opt.value)}
-                aria-pressed={isSelected}
-                whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
-                whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[44px] ${
-                  isSelected
-                    ? 'bg-[#DFE104] text-black shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg]'
-                    : 'bg-white hover:bg-[#DFE104] hover:shadow-[4px_4px_0_0_#000]'
-                }`}
-              >
-                {opt.label}
-              </motion.button>
-            );
-          })}
-        </motion.div>
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Date Range" defaultExpanded={false} delay={0.15}>
-        <div className="flex flex-col gap-4">
-          <div>
-            <label className="text-xs font-bold block mb-2 uppercase tracking-wide">Filter By</label>
-            <select
-              value={dateRange.field}
-              onChange={(e) =>
-                onDateRangeChange({
-                  ...dateRange,
-                  field: e.target.value as 'createdAt' | 'lastModified',
-                })
-              }
-              aria-label="Date field to filter by"
-              className="w-full border-4 border-black px-3 py-2 text-sm font-bold bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[2px_2px_0_0_#000]"
-            >
-              <option value="createdAt">Created Date</option>
-              <option value="lastModified">Modified Date</option>
-            </select>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
+          More Filters
+          <span aria-hidden="true">{moreOpen ? '▲' : '▼'}</span>
+        </button>
+        {moreOpen && (
+          <div className="p-6 flex flex-col gap-6">
             <div>
-              <label className="text-xs font-bold block mb-2 uppercase tracking-wide">From</label>
-              <input
-                type="date"
-                value={dateRange.start ?? ''}
+              <label className="label-caps block mb-3">Sort By</label>
+              <div className="grid grid-cols-2 gap-2">
+                {SORT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => onSortChange(opt.value)}
+                    aria-pressed={sortOption === opt.value}
+                    className={`border-2 border-black px-2 py-2 label-caps text-[10px] min-h-[40px] ${
+                      sortOption === opt.value
+                        ? 'bg-[#DFE104] shadow-[2px_2px_0_0_#000]'
+                        : 'bg-white hover:bg-[#DFE104]'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="label-caps block mb-3">Date Range</label>
+              <select
+                value={dateRange.field}
                 onChange={(e) =>
                   onDateRangeChange({
                     ...dateRange,
-                    start: e.target.value || null,
+                    field: e.target.value as 'createdAt' | 'lastModified',
                   })
                 }
-                aria-label="Start date"
-                className="w-full border-4 border-black px-2 py-2 font-mono text-xs bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[2px_2px_0_0_#000]"
-              />
+                className="w-full border-2 border-black px-3 py-2 text-sm font-bold bg-white mb-3"
+                aria-label="Date field"
+              >
+                <option value="createdAt">Created</option>
+                <option value="lastModified">Modified</option>
+              </select>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="date"
+                  value={dateRange.start ?? ''}
+                  onChange={(e) =>
+                    onDateRangeChange({ ...dateRange, start: e.target.value || null })
+                  }
+                  aria-label="Start date"
+                  className="w-full border-2 border-black px-2 py-2 font-mono text-xs bg-white"
+                />
+                <input
+                  type="date"
+                  value={dateRange.end ?? ''}
+                  onChange={(e) =>
+                    onDateRangeChange({ ...dateRange, end: e.target.value || null })
+                  }
+                  aria-label="End date"
+                  className="w-full border-2 border-black px-2 py-2 font-mono text-xs bg-white"
+                />
+              </div>
             </div>
+
             <div>
-              <label className="text-xs font-bold block mb-2 uppercase tracking-wide">To</label>
-              <input
-                type="date"
-                value={dateRange.end ?? ''}
-                onChange={(e) =>
-                  onDateRangeChange({
-                    ...dateRange,
-                    end: e.target.value || null,
-                  })
-                }
-                aria-label="End date"
-                className="w-full border-4 border-black px-2 py-2 font-mono text-xs bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[2px_2px_0_0_#000]"
-              />
+              <label className="label-caps block mb-3">Events</label>
+              <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                {events.map((event) => (
+                  <button
+                    key={event}
+                    type="button"
+                    onClick={() => onEventToggle(event)}
+                    aria-pressed={selectedEvents.has(event)}
+                    className={`border-2 border-black px-3 py-2 label-caps text-[10px] text-left min-h-[40px] ${
+                      selectedEvents.has(event)
+                        ? 'bg-[#DFE104] shadow-[2px_2px_0_0_#000]'
+                        : 'bg-white hover:bg-[#DFE104]'
+                    }`}
+                  >
+                    {event}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            <div>
+              <label className="label-caps block mb-3">Authors</label>
+              <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                {authors.map((author) => (
+                  <button
+                    key={author}
+                    type="button"
+                    onClick={() => onAuthorToggle(author)}
+                    aria-pressed={selectedAuthors.has(author)}
+                    className={`border-2 border-black px-3 py-2 label-caps text-[10px] text-left min-h-[40px] ${
+                      selectedAuthors.has(author)
+                        ? 'bg-[#06B6D4] shadow-[2px_2px_0_0_#000]'
+                        : 'bg-white hover:bg-[#06B6D4]'
+                    }`}
+                  >
+                    {author}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {hasFilters && (
+              <button
+                type="button"
+                onClick={onClear}
+                className="w-full border-2 border-black px-4 py-3 label-caps bg-white hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_0_#000]"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
-          {(dateRange.start || dateRange.end) && (
-            <button
-              onClick={() => onDateRangeChange({ ...dateRange, start: null, end: null })}
-              className="text-xs font-bold underline hover:no-underline self-start"
-            >
-              Clear dates
-            </button>
-          )}
-        </div>
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        title="Categories"
-        defaultExpanded={false}
-        badge={selectedCategories.size}
-        delay={0.2}
-      >
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={{
-            initial: {},
-            animate: {
-              transition: {
-                staggerChildren: 0.02,
-                delayChildren: 0.05,
-              },
-            },
-          }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-2"
-        >
-          {categories.map((cat) => {
-            const color = getCategoryColor(cat);
-            const isSelected = selectedCategories.has(cat);
-            return (
-              <motion.button
-                key={cat}
-                variants={{
-                  initial: { opacity: 0, scale: 0.9, rotate: -3 },
-                  animate: { opacity: 1, scale: 1, rotate: 0 },
-                }}
-                transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-                onClick={() => onCategoryToggle(cat)}
-                aria-pressed={isSelected}
-                whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
-                whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] ${color.bg} ${color.text} ${
-                  isSelected
-                    ? 'shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
-                    : 'hover:shadow-[4px_4px_0_0_#000]'
-                }`}
-              >
-                {cat}
-              </motion.button>
-            );
-          })}
-        </motion.div>
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        title="Events"
-        defaultExpanded={false}
-        badge={selectedEvents.size}
-        delay={0.25}
-      >
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={{
-            initial: {},
-            animate: {
-              transition: {
-                staggerChildren: 0.02,
-                delayChildren: 0.05,
-              },
-            },
-          }}
-          className="flex flex-col gap-2"
-        >
-          {events.map((event) => {
-            const isSelected = selectedEvents.has(event);
-            return (
-              <motion.button
-                key={event}
-                variants={{
-                  initial: { opacity: 0, scale: 0.9 },
-                  animate: { opacity: 1, scale: 1 },
-                }}
-                transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-                onClick={() => onEventToggle(event)}
-                aria-pressed={isSelected}
-                whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
-                whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] text-left ${
-                  isSelected
-                    ? 'bg-[#DFE104] text-black shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
-                    : 'bg-white hover:bg-[#DFE104] hover:shadow-[4px_4px_0_0_#000]'
-                }`}
-              >
-                {event}
-              </motion.button>
-            );
-          })}
-        </motion.div>
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        title="Authors"
-        defaultExpanded={false}
-        badge={selectedAuthors.size}
-        delay={0.3}
-      >
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={{
-            initial: {},
-            animate: {
-              transition: {
-                staggerChildren: 0.02,
-                delayChildren: 0.05,
-              },
-            },
-          }}
-          className="flex flex-col gap-2"
-        >
-          {authors.map((author) => {
-            const isSelected = selectedAuthors.has(author);
-            return (
-              <motion.button
-                key={author}
-                variants={{
-                  initial: { opacity: 0, scale: 0.9 },
-                  animate: { opacity: 1, scale: 1 },
-                }}
-                transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-                onClick={() => onAuthorToggle(author)}
-                aria-pressed={isSelected}
-                whileHover={!isSelected ? { x: -2, y: -2 } : undefined}
-                whileTap={{ scale: 0.95 }}
-                className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] text-left ${
-                  isSelected
-                    ? 'bg-blue-500 text-white shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
-                    : 'bg-white hover:bg-blue-500 hover:text-white hover:shadow-[4px_4px_0_0_#000]'
-                }`}
-              >
-                {author}
-              </motion.button>
-            );
-          })}
-          <motion.button
-            variants={{
-              initial: { opacity: 0, scale: 0.9 },
-              animate: { opacity: 1, scale: 1 },
-            }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            onClick={() => onAuthorToggle('Unknown')}
-            aria-pressed={selectedAuthors.has('Unknown')}
-            whileHover={!selectedAuthors.has('Unknown') ? { x: -2, y: -2 } : undefined}
-            whileTap={{ scale: 0.95 }}
-            className={`border-4 border-black px-3 py-2 font-bold uppercase text-xs tracking-wide transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 min-h-[40px] text-left border-dashed ${
-              selectedAuthors.has('Unknown')
-                ? 'bg-gray-500 text-white shadow-[4px_4px_0_0_#000] -translate-y-1 -translate-x-1 rotate-[-1deg] ring-2 ring-black ring-offset-2'
-                : 'bg-white hover:bg-gray-500 hover:text-white hover:shadow-[4px_4px_0_0_#000]'
-            }`}
-          >
-            Unknown
-          </motion.button>
-        </motion.div>
-      </CollapsibleSection>
-
-      <AnimatePresence>
-        {hasFilters && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onClear}
-            className="w-full border-4 border-black px-4 py-3 font-bold uppercase text-xs bg-white hover:bg-black hover:text-white transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] min-h-[44px] mt-4"
-          >
-            Clear Filters
-          </motion.button>
         )}
-      </AnimatePresence>
-    </motion.aside>
+      </div>
+    </aside>
   );
 }

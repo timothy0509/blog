@@ -35,7 +35,7 @@ export default function BrutalButton({
   size = 'md',
   ...props 
 }: BrutalButtonProps) {
-  const baseClasses = 'border-4 border-black font-bold uppercase tracking-wide shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 inline-flex items-center justify-center min-h-[44px]';
+  const baseClasses = 'border-2 border-black font-bold uppercase tracking-[0.1em] text-xs shadow-[8px_8px_0_0_#000] hover:translate-x-2 hover:translate-y-2 hover:shadow-none active:translate-x-2 active:translate-y-2 active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 inline-flex items-center justify-center min-h-[44px]';
   
   const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 

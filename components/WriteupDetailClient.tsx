@@ -1,199 +1,189 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { WriteupInfo } from '@/lib/github';
+import { getCategoryColor } from '@/lib/colors';
+import { UserIcon, CalendarIcon, ArrowRightIcon, FolderIcon } from '@/components/icons';
+import ShareButtons from '@/components/ShareButtons';
 
 interface WriteupDetailClientProps {
-  event: string;
-  category: string;
-  categoryColor: { bg: string; text: string };
-  title: string;
+  writeup: WriteupInfo;
+  description: string | null;
   readingTime: number;
-  createdAt: string;
-  lastModified: string;
+  pageUrl: string;
+  relatedSameEvent: WriteupInfo[];
+  nextWriteup: WriteupInfo | null;
   children: React.ReactNode;
 }
 
+function hashWriteupId(slug: string[]): string {
+  const str = slug.join('/');
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return `0x${(Math.abs(hash) >>> 0).toString(16).toUpperCase().padStart(6, '0').slice(0, 6)}`;
+}
+
+function formatLongDate(dateString: string): string {
+  const d = new Date(dateString);
+  if (Number.isNaN(d.getTime())) return dateString;
+  return d.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).toUpperCase();
+}
+
 export default function WriteupDetailClient({
-  event,
-  category,
-  categoryColor,
-  title,
+  writeup,
+  description,
   readingTime,
-  createdAt,
-  lastModified,
+  pageUrl,
+  relatedSameEvent,
+  nextWriteup,
   children,
 }: WriteupDetailClientProps) {
+  const categoryColor = getCategoryColor(writeup.category);
+  const writeupId = hashWriteupId(writeup.slug);
+  const gutterLabel = `${writeup.event}_${writeup.category}`.replace(/\s+/g, '_').toUpperCase();
+  const author = writeup.nickname || writeup.writer;
+
   return (
-    <article className="max-w-4xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-        className="mb-6"
-      >
-        <Link
-          href="/writeups"
-          className="inline-block border-4 border-black px-4 py-2 font-bold uppercase text-sm bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2"
-        >
-          &larr; Back to Writeups
-        </Link>
-      </motion.div>
+    <div className="flex flex-col w-full">
+      <div className="w-full h-[6px] bg-black" />
 
-      <motion.header
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.05 }}
-        className="border-b-[6px] border-black pb-8 mb-8"
-      >
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={{
-            initial: {},
-            animate: {
-              transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.1,
-              },
-            },
-          }}
-          className="flex flex-wrap gap-3 mb-6"
-        >
-          <motion.span
-            variants={{
-              initial: { opacity: 0, scale: 0.8, rotate: -10 },
-              animate: { opacity: 1, scale: 1, rotate: -1 },
-            }}
-            transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-            className="font-bold bg-[#DFE104] border-4 border-black px-4 py-2 text-base transform -rotate-1 shadow-[4px_4px_0_0_#000]"
-          >
-            {event}
-          </motion.span>
-          <motion.span
-            variants={{
-              initial: { opacity: 0, scale: 0.8, rotate: 10 },
-              animate: { opacity: 1, scale: 1, rotate: 1 },
-            }}
-            transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-            className={`font-bold ${categoryColor.bg} ${categoryColor.text} border-4 border-black px-4 py-2 text-base transform rotate-1 shadow-[4px_4px_0_0_#000]`}
-          >
-            {category}
-          </motion.span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-          className="text-display font-display uppercase leading-none mb-4 tracking-tight"
-        >
-          {title}
-        </motion.h1>
-
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={{
-            initial: {},
-            animate: {
-              transition: {
-                staggerChildren: 0.05,
-                delayChildren: 0.25,
-              },
-            },
-          }}
-          className="flex flex-wrap items-center gap-3"
-        >
-          <motion.div
-            variants={{
-              initial: { opacity: 0, scale: 0.9 },
-              animate: { opacity: 1, scale: 1 },
-            }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-black text-white px-4 py-2 font-bold text-base border-4 border-black transform -rotate-1"
-          >
-            {readingTime} min read
-          </motion.div>
-          <motion.div
-            variants={{
-              initial: { opacity: 0, scale: 0.9 },
-              animate: { opacity: 1, scale: 1 },
-            }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-white border-4 border-black px-4 py-2 font-bold text-base transform rotate-1 shadow-[4px_4px_0_0_#DFE104]"
-          >
-            <span className="text-[#EF4444]">⚑</span> FLAG DOCUMENTED
-          </motion.div>
-          <motion.div
-            variants={{
-              initial: { opacity: 0, scale: 0.9 },
-              animate: { opacity: 1, scale: 1 },
-            }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform -rotate-1"
-          >
-            Created: {createdAt}
-          </motion.div>
-          <motion.div
-            variants={{
-              initial: { opacity: 0, scale: 0.9 },
-              animate: { opacity: 1, scale: 1 },
-            }}
-            transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
-            className="inline-block bg-zinc-100 border-4 border-black px-4 py-2 font-bold text-base transform rotate-1"
-          >
-            Updated: {lastModified}
-          </motion.div>
-        </motion.div>
-      </motion.header>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
-      >
-        {children}
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-        className="mt-16 pt-8 border-t-[6px] border-black"
-      >
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <motion.div
-            initial={{ scale: 1 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="bg-black text-white p-6 font-bold text-center text-lg shadow-[8px_8px_0_0_#DFE104] border-4 border-[#DFE104] max-w-lg transform -rotate-1"
-          >
-            <motion.span
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-              className="text-2xl block mb-2"
-            >
-              ⚑
-            </motion.span>
-            FLAG CAPTURED
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-          >
-            <Link 
-              href="/writeups" 
-              className="border-4 border-black px-6 py-4 font-bold uppercase bg-white hover:bg-black hover:text-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 transform rotate-1"
-            >
-              Browse More Writeups&rarr;
-            </Link>
-          </motion.div>
+      <div className="max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row">
+        {/* Left gutter */}
+        <div className="hidden lg:block w-20 flex-shrink-0 border-r-4 border-black pt-12">
+          <div className="[writing-mode:vertical-rl] rotate-180 flex items-center gap-4 sticky top-28">
+            <span className="label-code uppercase tracking-tighter opacity-40">
+              {gutterLabel}
+            </span>
+            <div className={`w-1 h-32 ${categoryColor.bar}`} />
+            <span className="label-caps">WRITEUP_ID: {writeupId}</span>
+          </div>
         </div>
-      </motion.div>
-    </article>
+
+        {/* Main article */}
+        <article className="flex-grow pt-12 md:pr-12 pb-12 min-w-0">
+          <div className="mb-6">
+            <Link
+              href="/writeups"
+              className="inline-block border-2 border-black px-4 py-2 label-caps bg-white shadow-[4px_4px_0_0_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+            >
+              ← Back to Writeups
+            </Link>
+          </div>
+
+          <header className="relative mb-12">
+            <div className="absolute -top-6 -left-2 label-code text-[#DFE104] bg-black px-2 py-1 z-10 shadow-[4px_4px_0_0_#000]">
+              {writeup.category.toUpperCase()} CHALLENGE
+            </div>
+            <h1 className="font-display text-display font-bold uppercase break-words leading-none mb-6 pt-4">
+              {writeup.title}
+            </h1>
+            <div className="flex flex-wrap gap-4 items-center">
+              {author && (
+                <div className="bg-[#DFE104] border-2 border-black px-4 py-1 shadow-[4px_4px_0_0_#000] flex items-center gap-2">
+                  <UserIcon size={18} />
+                  <span className="label-caps">{author}</span>
+                </div>
+              )}
+              <div className="bg-[#e2e2e2] border-2 border-black px-4 py-1 shadow-[4px_4px_0_0_#000] flex items-center gap-2">
+                <CalendarIcon size={18} />
+                <span className="label-caps">{formatLongDate(writeup.createdAt)}</span>
+              </div>
+              <div className="bg-black text-white border-2 border-black px-4 py-1 shadow-[4px_4px_0_0_#000] label-caps">
+                {readingTime} MIN READ
+              </div>
+            </div>
+            <div className="mt-6">
+              <ShareButtons title={writeup.title} url={pageUrl} />
+            </div>
+          </header>
+
+          {description && (
+            <section className="mb-12">
+              <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
+                <div className="absolute top-0 right-0 p-2 opacity-10 select-none pointer-events-none" aria-hidden="true">
+                  <span className="text-6xl font-mono">&gt;_</span>
+                </div>
+                <h2 className="label-caps text-[#484833] mb-2">DESCRIPTION</h2>
+                <p className="text-lg font-medium italic">{description}</p>
+              </div>
+            </section>
+          )}
+
+          <div className="prose-content">{children}</div>
+        </article>
+
+        {/* Right sidebar */}
+        <aside className="w-full md:w-80 flex-shrink-0 pt-12 pb-12">
+          <div className="sticky top-28 space-y-6">
+            {relatedSameEvent.length > 0 && (
+              <div className="bg-white border-4 border-black p-4 shadow-[8px_8px_0_0_#000]">
+                <div className="flex items-center gap-2 mb-4">
+                  <FolderIcon className="text-[#a900a9]" size={20} />
+                  <h3 className="label-caps">SAME_CTF_LOGS</h3>
+                </div>
+                <div className="space-y-4">
+                  {relatedSameEvent.map((w, i) => {
+                    const color = getCategoryColor(w.category);
+                    return (
+                      <Link
+                        key={w.path}
+                        href={`/writeups/${w.slug.join('/')}`}
+                        className={`block group/link ${
+                          i < relatedSameEvent.length - 1
+                            ? 'border-b-2 border-[#e2e2e2] pb-2'
+                            : ''
+                        } hover:border-black transition-colors`}
+                      >
+                        <span className="label-code block uppercase" style={{ color: color.hex }}>
+                          {w.category.toUpperCase()}
+                        </span>
+                        <span className="text-lg font-bold uppercase group-hover/link:text-[#a900a9] transition-colors break-words">
+                          {w.title}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {nextWriteup && (
+              <div className="bg-black text-white p-4 border-4 border-black shadow-[8px_8px_0_0_#000] flex flex-col justify-between min-h-[200px] gap-6">
+                <div>
+                  <div className="label-caps text-[#DFE104] mb-2 flex items-center justify-between">
+                    <span>NEXT_ARTICLE</span>
+                    <ArrowRightIcon size={18} />
+                  </div>
+                  <h4 className="font-display text-2xl font-bold leading-tight uppercase break-words">
+                    {nextWriteup.title}
+                  </h4>
+                </div>
+                <Link
+                  href={`/writeups/${nextWriteup.slug.join('/')}`}
+                  className="w-full bg-[#DFE104] text-black label-caps py-3 border-2 border-black shadow-[4px_4px_0_0_#fff] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-center"
+                >
+                  READ NOW
+                </Link>
+              </div>
+            )}
+
+            <div className={`relative overflow-hidden border-4 border-black h-40 ${categoryColor.bar}`}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60" />
+              <div className="absolute bottom-4 left-4">
+                <p className="label-caps text-white">{writeup.event}</p>
+                <p className="label-code text-[#DFE104]">{writeup.category.toUpperCase()}</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
   );
 }
