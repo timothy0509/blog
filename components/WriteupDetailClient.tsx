@@ -67,7 +67,7 @@ export default function WriteupDetailClient({
         </div>
 
         {/* Main article */}
-        <article className="flex-grow pt-12 md:pr-12 pb-12 min-w-0">
+        <article className="flex-grow pt-12 md:px-12 pb-12 min-w-0">
           <div className="mb-6">
             <Link
               href="/writeups"
