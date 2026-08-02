@@ -3,15 +3,9 @@
 import { useState, useMemo } from 'react';
 import { WriteupInfo } from '@/lib/github';
 import FilterSidebar from './FilterSidebar';
+import MobileFilterSheet from './MobileFilterSheet';
 import WriteupListCard from './WriteupListCard';
-
-type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'event';
-
-interface DateRange {
-  field: 'createdAt' | 'lastModified';
-  start: string | null;
-  end: string | null;
-}
+import type { SortOption, DateRange } from '@/lib/filters';
 
 interface WriteupsFilterProps {
   writeups: WriteupInfo[];
@@ -22,7 +16,7 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
   const [selectedEvents, setSelectedEvents] = useState<Set<string>>(new Set());
   const [selectedAuthors, setSelectedAuthors] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [dateRange, setDateRange] = useState<DateRange>({
     field: 'createdAt',
@@ -154,6 +148,33 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
     dateRange.start ||
     dateRange.end;
 
+  const activeFilterCount =
+    selectedCategories.size +
+    selectedEvents.size +
+    selectedAuthors.size +
+    (searchQuery ? 1 : 0) +
+    (dateRange.start || dateRange.end ? 1 : 0);
+
+  const filterProps = {
+    categories,
+    events,
+    authors,
+    selectedCategories,
+    selectedEvents,
+    selectedAuthors,
+    searchQuery,
+    sortOption,
+    dateRange,
+    onCategoryToggle: toggleCategory,
+    onSelectAllCategories: selectAllCategories,
+    onEventToggle: toggleEvent,
+    onAuthorToggle: toggleAuthor,
+    onSearchChange: setSearchQuery,
+    onSortChange: setSortOption,
+    onDateRangeChange: setDateRange,
+    onClear: handleClear,
+  };
+
   return (
     <div className="flex flex-col w-full">
       <div className="sr-only" aria-live="polite" aria-atomic="true">
@@ -194,40 +215,37 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto w-full px-6 py-12">
-        <div className="flex justify-end mb-4 lg:hidden">
+      <div className="max-w-7xl mx-auto w-full px-6 py-8 lg:py-12">
+        {/* Mobile: compact search + open sheet */}
+        <div className="lg:hidden mb-6 flex gap-3">
+          <div className="flex-1 bg-black text-white px-4 py-3 border-2 border-black min-w-0">
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="SEARCH..."
+              aria-label="Search writeups"
+              className="w-full bg-transparent label-code text-sm focus:outline-none placeholder:opacity-50"
+            />
+          </div>
           <button
             type="button"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="border-2 border-black px-4 py-2 label-caps bg-[#DFE104] shadow-[4px_4px_0_0_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-            aria-expanded={sidebarOpen}
-            aria-controls="filter-sidebar"
+            onClick={() => setMobileFiltersOpen(true)}
+            className="relative shrink-0 border-2 border-black px-4 py-3 label-caps bg-[#DFE104] shadow-[4px_4px_0_0_#000] min-h-[48px]"
+            aria-haspopup="dialog"
+            aria-expanded={mobileFiltersOpen}
           >
-            Filters {sidebarOpen ? '▲' : '▼'}
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-black text-[#DFE104] label-code text-[10px] min-w-[20px] h-5 px-1 flex items-center justify-center border border-[#DFE104]">
+                {activeFilterCount}
+              </span>
+            )}
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <FilterSidebar
-            categories={categories}
-            events={events}
-            authors={authors}
-            selectedCategories={selectedCategories}
-            selectedEvents={selectedEvents}
-            selectedAuthors={selectedAuthors}
-            searchQuery={searchQuery}
-            sortOption={sortOption}
-            dateRange={dateRange}
-            onCategoryToggle={toggleCategory}
-            onSelectAllCategories={selectAllCategories}
-            onEventToggle={toggleEvent}
-            onAuthorToggle={toggleAuthor}
-            onSearchChange={setSearchQuery}
-            onSortChange={setSortOption}
-            onDateRangeChange={setDateRange}
-            onClear={handleClear}
-            isOpen={sidebarOpen}
-          />
+          <FilterSidebar {...filterProps} />
 
           <div className="lg:col-span-9 flex flex-col gap-6">
             {filteredWriteups.length === 0 ? (
@@ -249,6 +267,13 @@ export default function WriteupsFilter({ writeups }: WriteupsFilterProps) {
           </div>
         </div>
       </div>
+
+      <MobileFilterSheet
+        {...filterProps}
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        resultCount={filteredWriteups.length}
+      />
     </div>
   );
 }
